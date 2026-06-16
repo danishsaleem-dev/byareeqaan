@@ -19,7 +19,7 @@ const waLink = `https://wa.me/${site.whatsapp.number}?text=${encodeURIComponent(
   "Hi By Areeqaan! I'd love to know more about your pieces ✨"
 )}`;
 
-export function Navbar({ announcement }: { announcement?: string }) {
+export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
@@ -33,22 +33,6 @@ export function Navbar({ announcement }: { announcement?: string }) {
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
       className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6"
     >
-      <AnimatePresence>
-        {announcement && !scrolled && (
-          <motion.div
-            initial={{ opacity: 0, y: -10, height: 0 }}
-            animate={{ opacity: 1, y: 0, height: "auto" }}
-            exit={{ opacity: 0, y: -10, height: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="mx-auto mb-2 max-w-6xl overflow-hidden"
-          >
-            <p className="rounded-full bg-violet-deep px-4 py-1.5 text-center text-xs font-medium tracking-wide text-ivory">
-              {announcement}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <nav
         className={`mx-auto flex max-w-6xl items-center justify-between rounded-full px-5 py-3 transition-all duration-500 ${
           scrolled

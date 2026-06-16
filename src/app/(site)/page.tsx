@@ -8,6 +8,7 @@ import { Testimonials } from "@/components/Testimonials";
 import { Contact } from "@/components/Contact";
 import { Guarantee } from "@/components/site/Guarantee";
 import { FeaturedProducts } from "@/components/site/FeaturedProducts";
+import { AnnouncementStrip } from "@/components/site/AnnouncementStrip";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,11 @@ export default async function Home() {
       <HeroImage
         hero={homepage.hero}
         images={heroImages.length ? heroImages : undefined}
+      />
+      <AnnouncementStrip
+        text={
+          homepage.announcement.enabled ? homepage.announcement.text : undefined
+        }
       />
       <Marquee />
       <FeaturedProducts products={featured} />

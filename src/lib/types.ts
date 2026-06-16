@@ -104,7 +104,7 @@ export interface SiteConfig {
 }
 
 export const DEFAULT_HOMEPAGE: HomepageConfig = {
-  announcement: { enabled: true, text: "Free delivery all over Pakistan · We ship worldwide ✨" },
+  announcement: { enabled: true, text: "Free delivery all over Pakistan over 5000PKR · We also ship worldwide ✨" },
   hero: {
     images: [],
     headline: "Tiny details. Big statements.",

@@ -1,5 +1,5 @@
 import "server-only";
-import { supabaseAdmin } from "./supabase";
+import { supabaseAdmin, isSupabaseConfigured } from "./supabase";
 import { slugify } from "./slug";
 import {
   type Product,
@@ -122,6 +122,34 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   return data ? toProduct(data) : null;
 }
 
+// ── public (storefront) reads — published only, resilient if unconfigured ──
+export async function listPublishedProducts(): Promise<Product[]> {
+  if (!isSupabaseConfigured()) return [];
+  const sb = supabaseAdmin();
+  const { data, error } = await sb
+    .from("products")
+    .select("*")
+    .eq("status", "published")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(toProduct);
+}
+
+export async function getPublishedProductBySlug(
+  slug: string,
+): Promise<Product | null> {
+  if (!isSupabaseConfigured()) return null;
+  const sb = supabaseAdmin();
+  const { data, error } = await sb
+    .from("products")
+    .select("*")
+    .eq("slug", slug)
+    .eq("status", "published")
+    .maybeSingle();
+  if (error) throw error;
+  return data ? toProduct(data) : null;
+}
+
 export async function uniqueProductSlug(
   base: string,
   excludeId?: string,
@@ -200,6 +228,7 @@ export async function setProductFeatured(
 
 // ── collections ───────────────────────────────────────────────
 export async function listCollections(): Promise<Collection[]> {
+  if (!isSupabaseConfigured()) return [];
   const sb = supabaseAdmin();
   const { data, error } = await sb
     .from("collections")
@@ -207,6 +236,20 @@ export async function listCollections(): Promise<Collection[]> {
     .order("created_at", { ascending: false });
   if (error) throw error;
   return (data ?? []).map(toCollection);
+}
+
+export async function getCollectionBySlug(
+  slug: string,
+): Promise<Collection | null> {
+  if (!isSupabaseConfigured()) return null;
+  const sb = supabaseAdmin();
+  const { data, error } = await sb
+    .from("collections")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+  if (error) throw error;
+  return data ? toCollection(data) : null;
 }
 
 export async function getCollection(id: string): Promise<Collection | null> {

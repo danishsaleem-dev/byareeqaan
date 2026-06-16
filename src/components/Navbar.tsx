@@ -1,16 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { site } from "@/lib/site";
 
 const links = [
-  { label: "Collections", href: "#collections" },
-  { label: "Story", href: "#story" },
-  { label: "Why us", href: "#promise" },
-  { label: "Contact", href: "#contact" },
+  { label: "Shop", href: "/shop" },
+  { label: "Collections", href: "/collections" },
+  { label: "Story", href: "/story" },
+  { label: "Why us", href: "/why-us" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const waLink = `https://wa.me/${site.whatsapp.number}?text=${encodeURIComponent(
@@ -38,20 +40,20 @@ export function Navbar() {
             : "bg-transparent"
         }`}
       >
-        <a href="#top" aria-label="By Areeqaan — home" className="shrink-0">
+        <Link href="/" aria-label="By Areeqaan — home" className="shrink-0">
           <Logo className="h-12 w-auto" fallbackClassName="text-[19px]" priority />
-        </a>
+        </Link>
 
         <ul className="hidden items-center gap-8 md:flex">
           {links.map((l) => (
             <li key={l.href}>
-              <a
+              <Link
                 href={l.href}
                 className="group relative text-sm font-medium text-plum/80 transition-colors hover:text-violet-deep"
               >
                 {l.label}
                 <span className="absolute -bottom-1 left-0 h-px w-0 bg-violet transition-all duration-300 group-hover:w-full" />
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -86,13 +88,13 @@ export function Navbar() {
             <ul className="flex flex-col">
               {links.map((l) => (
                 <li key={l.href}>
-                  <a
+                  <Link
                     href={l.href}
                     onClick={() => setOpen(false)}
                     className="block rounded-2xl px-4 py-3 font-display text-2xl text-plum transition-colors hover:bg-cream"
                   >
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

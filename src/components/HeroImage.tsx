@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
-import { ArrowDown, Sparkles } from "lucide-react";
+import { ArrowUpRight, Sparkles } from "lucide-react";
 import { Leaf } from "./Leaf";
 import { InstagramInvite } from "./InstagramInvite";
 import { site } from "@/lib/site";
@@ -167,16 +168,16 @@ export function HeroImage() {
             transition={{ duration: 0.9, ease, delay: 1.05 }}
             className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start"
           >
-            <a
-              href="#collections"
+            <Link
+              href="/shop"
               className="group inline-flex items-center gap-2 rounded-full bg-violet-deep px-7 py-3.5 text-sm font-medium text-ivory shadow-soft transition-all duration-300 hover:bg-violet hover:shadow-[0_20px_45px_-18px_rgba(109,40,217,0.75)]"
             >
-              Explore collections
-              <ArrowDown
+              Shop the edit
+              <ArrowUpRight
                 size={16}
-                className="transition-transform duration-300 group-hover:translate-y-0.5"
+                className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               />
-            </a>
+            </Link>
             <a
               href={waLink}
               target="_blank"

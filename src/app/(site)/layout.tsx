@@ -1,4 +1,6 @@
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 
 export default function SiteLayout({
   children,
@@ -7,7 +9,11 @@ export default function SiteLayout({
 }) {
   return (
     <div className="grain">
-      <SmoothScroll>{children}</SmoothScroll>
+      <SmoothScroll>
+        <Navbar />
+        {children}
+        <Footer />
+      </SmoothScroll>
     </div>
   );
 }

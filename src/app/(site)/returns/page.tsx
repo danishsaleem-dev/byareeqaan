@@ -4,9 +4,10 @@ import { Guarantee } from "@/components/site/Guarantee";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Returns & refunds — By Areeqaan",
+  title: "Returns & refunds",
   description:
     "By Areeqaan offers a 100% money-back guarantee on damaged products. See how to claim your refund with an unboxing video.",
+  alternates: { canonical: "/returns" },
 };
 
 export default function ReturnsPage() {

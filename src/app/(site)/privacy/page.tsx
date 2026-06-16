@@ -3,8 +3,9 @@ import { LegalPage } from "@/components/site/LegalPage";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Privacy policy — By Areeqaan",
+  title: "Privacy policy",
   description: "How By Areeqaan collects, uses and protects your information.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {

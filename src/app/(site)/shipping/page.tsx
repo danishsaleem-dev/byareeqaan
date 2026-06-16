@@ -3,8 +3,9 @@ import { LegalPage } from "@/components/site/LegalPage";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Shipping — By Areeqaan",
+  title: "Shipping",
   description: "Shipping and delivery information for By Areeqaan jewellery orders.",
+  alternates: { canonical: "/shipping" },
 };
 
 export default function ShippingPage() {

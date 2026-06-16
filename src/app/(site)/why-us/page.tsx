@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Why By Areeqaan",
   description:
     "Handpicked, trend-led jewellery, hand-wrapped orders and easy WhatsApp ordering — delivered across Pakistan and worldwide.",
+  alternates: { canonical: "/why-us" },
 };
 
 const icons = [Sparkles, Truck, Layers, Gift];

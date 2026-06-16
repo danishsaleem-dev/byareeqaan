@@ -1,12 +1,26 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCollectionBySlug, listPublishedProducts } from "@/lib/data";
+import { getCollectionBySlug, listCollections, listPublishedProducts } from "@/lib/data";
 import { site } from "@/lib/site";
+import { absUrl, collectionLd, breadcrumbLd } from "@/lib/seo";
 import { PageHeader } from "@/components/site/PageHeader";
 import { ShopBrowser } from "@/components/site/ShopBrowser";
+import { JsonLd } from "@/components/seo/JsonLd";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+const getCol = cache(getCollectionBySlug);
+
+export async function generateStaticParams() {
+  try {
+    const cols = await listCollections();
+    return cols.map((c) => ({ slug: c.slug }));
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -14,11 +28,21 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const collection = await getCollectionBySlug(slug);
-  if (!collection) return { title: "Not found — By Areeqaan" };
+  const collection = await getCol(slug);
+  if (!collection) return { title: "Not found" };
+  const description = collection.description || site.description;
+  const canonical = `/collections/${collection.slug}`;
   return {
-    title: `${collection.name} — ${site.name}`,
-    description: collection.description || site.description,
+    title: collection.name,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: `${collection.name} — ${site.name}`,
+      description,
+      type: "website",
+      url: absUrl(canonical),
+      images: collection.imageUrl ? [{ url: collection.imageUrl }] : undefined,
+    },
   };
 }
 
@@ -28,7 +52,7 @@ export default async function CollectionPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const collection = await getCollectionBySlug(slug);
+  const collection = await getCol(slug);
   if (!collection) notFound();
 
   const all = await listPublishedProducts();
@@ -36,6 +60,16 @@ export default async function CollectionPage({
 
   return (
     <main>
+      <JsonLd
+        data={[
+          collectionLd(collection, products),
+          breadcrumbLd([
+            { name: "Home", path: "/" },
+            { name: "Collections", path: "/collections" },
+            { name: collection.name, path: `/collections/${collection.slug}` },
+          ]),
+        ]}
+      />
       <PageHeader
         eyebrow="Collection"
         title={collection.name}

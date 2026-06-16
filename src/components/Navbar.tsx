@@ -41,7 +41,7 @@ export function Navbar() {
         }`}
       >
         <Link href="/" aria-label="By Areeqaan — home" className="shrink-0">
-          <Logo className="h-12 w-auto" fallbackClassName="text-[19px]" priority />
+          <Logo className="h-14 w-auto sm:h-16" fallbackClassName="text-[22px]" priority />
         </Link>
 
         <ul className="hidden items-center gap-8 md:flex">

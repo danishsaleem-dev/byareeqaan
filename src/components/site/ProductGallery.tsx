@@ -49,7 +49,9 @@ export function ProductGallery({
                 src={current?.url}
                 alt={name}
                 grad={grad}
+                priority={active === 0}
                 eager
+                sizes="(min-width: 1024px) 45vw, 100vw"
                 className="h-full w-full"
               />
             ) : (
@@ -81,7 +83,7 @@ export function ProductGallery({
               }`}
             >
               {m.kind === "image" ? (
-                <SmartImage src={m.url} alt={`${name} ${i + 1}`} grad={grad} className="h-full w-full" />
+                <SmartImage src={m.url} alt={`${name} ${i + 1}`} grad={grad} sizes="80px" className="h-full w-full" />
               ) : (
                 <span className="flex h-full w-full items-center justify-center bg-plum/80 text-ivory">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>

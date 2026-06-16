@@ -10,7 +10,7 @@ import { Guarantee } from "@/components/site/Guarantee";
 import { FeaturedProducts } from "@/components/site/FeaturedProducts";
 import { AnnouncementStrip } from "@/components/site/AnnouncementStrip";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function Home() {
   const [homepage, products, collections] = await Promise.all([

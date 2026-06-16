@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
@@ -8,12 +9,27 @@ import {
 } from "@/lib/data";
 import { gradFor } from "@/lib/format";
 import { site } from "@/lib/site";
+import { absUrl, productLd, breadcrumbLd } from "@/lib/seo";
 import { ProductGallery } from "@/components/site/ProductGallery";
 import { ProductPurchase } from "@/components/site/ProductPurchase";
 import { ProductCard } from "@/components/site/ProductCard";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Reveal } from "@/components/Reveal";
 
-export const dynamic = "force-dynamic";
+// Statically render product pages and refresh them in the background.
+export const revalidate = 300;
+
+// Memoised so generateMetadata and the page share a single DB read per request.
+const getProduct = cache(getPublishedProductBySlug);
+
+export async function generateStaticParams() {
+  try {
+    const products = await listPublishedProducts();
+    return products.map((p) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -21,19 +37,29 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const product = await getPublishedProductBySlug(slug);
-  if (!product) return { title: "Not found — By Areeqaan" };
-  const title = product.seoTitle || `${product.name} — ${site.name}`;
+  const product = await getProduct(slug);
+  if (!product) return { title: "Not found" };
+  const title = product.seoTitle || product.name;
   const description = product.seoDesc || product.shortDesc || site.description;
-  const image = product.images.find((i) => i.primary)?.url ?? product.images[0]?.url;
+  const image =
+    product.images.find((i) => i.primary)?.url ?? product.images[0]?.url;
+  const canonical = `/shop/${product.slug}`;
   return {
     title,
     description,
+    alternates: { canonical },
     openGraph: {
-      title,
+      title: `${title} — ${site.name}`,
       description,
       type: "website",
+      url: absUrl(canonical),
       images: image ? [{ url: image }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} — ${site.name}`,
+      description,
+      images: image ? [image] : undefined,
     },
   };
 }
@@ -44,7 +70,7 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = await getPublishedProductBySlug(slug);
+  const product = await getProduct(slug);
   if (!product) notFound();
 
   // Related: same collection first, then fill with the newest others.
@@ -62,6 +88,16 @@ export default async function ProductPage({
 
   return (
     <main className="pt-28 sm:pt-32">
+      <JsonLd
+        data={[
+          productLd(product),
+          breadcrumbLd([
+            { name: "Home", path: "/" },
+            { name: "Shop", path: "/shop" },
+            { name: product.name, path: `/shop/${product.slug}` },
+          ]),
+        ]}
+      />
       {/* breadcrumb */}
       <nav className="mx-auto mb-6 flex max-w-6xl items-center gap-1.5 px-5 text-xs text-muted sm:px-6">
         <Link href="/" className="transition-colors hover:text-violet-deep">

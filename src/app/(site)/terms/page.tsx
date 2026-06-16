@@ -3,8 +3,9 @@ import { LegalPage } from "@/components/site/LegalPage";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Terms of service — By Areeqaan",
+  title: "Terms of service",
   description: "The terms that apply when you shop with By Areeqaan.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {

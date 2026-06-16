@@ -4,12 +4,13 @@ import { Story } from "@/components/Story";
 import { Contact } from "@/components/Contact";
 import { PageHeader } from "@/components/site/PageHeader";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Our story — By Areeqaan",
+  title: "Our story",
   description:
     "By Areeqaan began as a love letter to minimal, modern adornment — jewellery that feels personal, never loud.",
+  alternates: { canonical: "/story" },
 };
 
 export default async function StoryPage() {

@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { Leaf } from "./Leaf";
 import { Reveal, RevealText } from "./Reveal";
+import { SmartImage } from "./site/SmartImage";
 
 type StoryData = { title?: string; content?: string; image?: string };
 
@@ -42,12 +43,11 @@ export function Story({ data }: { data?: StoryData }) {
             className="relative mx-auto aspect-square max-w-md overflow-hidden rounded-[2rem] bg-gradient-to-br from-violet-deep via-violet to-violet-bright shadow-card"
           >
             {image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <SmartImage
                 src={image}
                 alt="By Areeqaan"
-                className="absolute inset-0 h-full w-full object-cover"
-                draggable={false}
+                sizes="(min-width: 1024px) 28rem, 90vw"
+                className="absolute inset-0 h-full w-full"
               />
             ) : (
               <>

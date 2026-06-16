@@ -7,12 +7,13 @@ import { PageHeader } from "@/components/site/PageHeader";
 import { SmartImage } from "@/components/site/SmartImage";
 import { EmptyState } from "@/components/site/EmptyState";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Collections — By Areeqaan",
+  title: "Collections",
   description:
     "Explore By Areeqaan's edits of minimal, modern jewellery — necklaces, rings, earrings and more.",
+  alternates: { canonical: "/collections" },
 };
 
 export default async function CollectionsPage() {
@@ -60,6 +61,7 @@ export default async function CollectionsPage() {
                   src={c.preview}
                   alt={c.name}
                   grad={gradFor(c.id)}
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   className="absolute inset-0 h-full w-full"
                   imgClassName="transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
                 />

@@ -2,12 +2,14 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { Leaf } from "./Leaf";
 import { InstagramInvite } from "./InstagramInvite";
 import { site } from "@/lib/site";
 import { gradFor } from "@/lib/format";
+import { isOptimizable } from "@/lib/image";
 
 const waLink = `https://wa.me/${site.whatsapp.number}`;
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -43,22 +45,38 @@ function Tile({
   eager?: boolean;
 }) {
   const [err, setErr] = useState(false);
+  const alt = item.label ? `By Areeqaan ${item.label}` : "By Areeqaan";
+  const imgClass =
+    "h-full w-full object-cover transition-transform duration-700 hover:scale-105";
   return (
     <div
       className={`relative overflow-hidden rounded-[1.4rem] shadow-card ${className}`}
       style={{ background: item.grad }}
     >
-      {!err && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={item.src}
-          alt={item.label ? `By Areeqaan ${item.label}` : "By Areeqaan"}
-          loading={eager ? "eager" : "lazy"}
-          draggable={false}
-          onError={() => setErr(true)}
-          className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-        />
-      )}
+      {!err &&
+        (isOptimizable(item.src) ? (
+          <Image
+            src={item.src}
+            alt={alt}
+            fill
+            sizes="(min-width: 1024px) 25vw, 144px"
+            loading={eager ? "eager" : "lazy"}
+            draggable={false}
+            onError={() => setErr(true)}
+            className={imgClass}
+          />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={item.src}
+            alt={alt}
+            loading={eager ? "eager" : "lazy"}
+            decoding="async"
+            draggable={false}
+            onError={() => setErr(true)}
+            className={imgClass}
+          />
+        ))}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-violet-deep/45 via-transparent to-transparent" />
       {item.label && (
         <span className="pointer-events-none absolute bottom-3 left-3 font-display text-lg text-white drop-shadow">

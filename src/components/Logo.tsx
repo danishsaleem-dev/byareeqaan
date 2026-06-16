@@ -43,8 +43,11 @@ export function Logo({
         ref={ref}
         src="/logo.png"
         alt="By Areeqaan"
+        width={600}
+        height={534}
         className={`${className} select-none`}
         loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : undefined}
         draggable={false}
         onError={() => setUseFallback(true)}
       />

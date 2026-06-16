@@ -3,12 +3,13 @@ import { getHomepage } from "@/lib/data";
 import { Contact } from "@/components/Contact";
 import { PageHeader } from "@/components/site/PageHeader";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Contact — By Areeqaan",
+  title: "Contact",
   description:
     "Message By Areeqaan on WhatsApp or social media to order, style and ship minimal jewellery anywhere.",
+  alternates: { canonical: "/contact" },
 };
 
 export default async function ContactPage() {

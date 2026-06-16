@@ -164,7 +164,7 @@ export function HeroImage({
         {/* ---------- Content ---------- */}
         <motion.div
           style={{ y: yContent, opacity }}
-          className="relative z-10 pt-32 text-center lg:py-24 lg:text-left"
+          className="relative z-10 min-w-0 pt-32 text-center lg:py-24 lg:text-left"
         >
           <motion.span
             initial={{ opacity: 0, y: 20 }}

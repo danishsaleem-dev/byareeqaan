@@ -414,6 +414,7 @@ async function setSetting(key: string, value: any): Promise<void> {
 }
 
 export async function getHomepage(): Promise<HomepageConfig> {
+  if (!isSupabaseConfigured()) return DEFAULT_HOMEPAGE;
   const s = (await getSetting("homepage")) ?? {};
   return {
     announcement: { ...DEFAULT_HOMEPAGE.announcement, ...s.announcement },
@@ -429,6 +430,7 @@ export async function saveHomepage(config: HomepageConfig): Promise<void> {
 }
 
 export async function getSite(): Promise<SiteConfig> {
+  if (!isSupabaseConfigured()) return DEFAULT_SITE;
   const s = (await getSetting("site")) ?? {};
   return {
     brand: { ...DEFAULT_SITE.brand, ...s.brand },

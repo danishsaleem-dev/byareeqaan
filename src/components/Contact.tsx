@@ -43,7 +43,20 @@ const channels = [
   },
 ];
 
-export function Contact() {
+type ContactData = { title?: string; message?: string };
+
+const DEFAULT_TITLE = "Let's find your next favourite";
+const DEFAULT_MESSAGE =
+  "Message us on WhatsApp or slide into the DMs — we'll help you pick, style and ship anywhere you are.";
+
+export function Contact({ data }: { data?: ContactData }) {
+  const title = data?.title?.trim() || DEFAULT_TITLE;
+  const words = title.split(" ");
+  const accentCount = words.length > 2 ? 2 : 1;
+  const accent = words.slice(-accentCount).join(" ");
+  const lead = words.slice(0, words.length - accentCount).join(" ");
+  const message = data?.message?.trim() || DEFAULT_MESSAGE;
+
   return (
     <section id="contact" className="px-4 pb-10 pt-12 sm:px-6 sm:pb-16">
       <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-violet-deep px-6 py-16 text-ivory sm:rounded-[2.5rem] sm:px-12 sm:py-24">
@@ -61,15 +74,14 @@ export function Contact() {
           </Reveal>
 
           <h2 className="mx-auto max-w-3xl font-display text-[clamp(2.4rem,7vw,5rem)] font-medium leading-[0.98]">
-            <RevealText text="Let's find your" />{" "}
+            {lead && <RevealText text={lead} />}{lead ? " " : ""}
             <span className="italic text-gold-soft">
-              <RevealText text="next favourite" delay={0.1} />
+              <RevealText text={accent} delay={0.1} />
             </span>
           </h2>
 
           <Reveal i={1} as="p" className="mx-auto mt-6 max-w-xl text-ivory/75">
-            Message us on WhatsApp or slide into the DMs — we&apos;ll help you
-            pick, style and ship anywhere you are.
+            {message}
           </Reveal>
 
           <Reveal i={2} className="mt-9 flex justify-center">

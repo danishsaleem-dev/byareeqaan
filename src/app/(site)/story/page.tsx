@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { getHomepage } from "@/lib/data";
 import { Story } from "@/components/Story";
 import { Contact } from "@/components/Contact";
 import { PageHeader } from "@/components/site/PageHeader";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Our story — By Areeqaan",
@@ -9,7 +12,9 @@ export const metadata: Metadata = {
     "By Areeqaan began as a love letter to minimal, modern adornment — jewellery that feels personal, never loud.",
 };
 
-export default function StoryPage() {
+export default async function StoryPage() {
+  const homepage = await getHomepage();
+
   return (
     <main>
       <PageHeader
@@ -22,8 +27,8 @@ export default function StoryPage() {
         }
         subtitle="A small, growing label crafting minimal jewellery for the modern muse — delivered with care across Pakistan and worldwide."
       />
-      <Story />
-      <Contact />
+      <Story data={homepage.story} />
+      <Contact data={homepage.contact} />
     </main>
   );
 }

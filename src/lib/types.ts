@@ -110,8 +110,8 @@ export const DEFAULT_HOMEPAGE: HomepageConfig = {
     headline: "Tiny details. Big statements.",
     subheadline: "",
     tagline: "Trendy · Minimal · Affordable Luxe",
-    ctaText: "Explore collections",
-    ctaLink: "#collections",
+    ctaText: "Shop the edit",
+    ctaLink: "/shop",
   },
   features: {
     items: [

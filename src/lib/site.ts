@@ -94,6 +94,21 @@ export const promises = [
   },
 ];
 
+export const guarantee = {
+  title: "100% money-back guarantee",
+  intro:
+    "We pack every order with love & care — but in the rare case your piece arrives damaged, you're fully covered with a 100% refund.",
+  // Conditions a customer must meet to claim the damaged-item refund.
+  conditions: [
+    "Record a clear unboxing video while opening your parcel",
+    "Keep the video continuous and unedited",
+    "Show the package condition before opening it",
+    "Contact us immediately after receiving the parcel",
+  ],
+  outro:
+    "Our goal is to make your shopping experience safe, easy and worry-free.",
+} as const;
+
 export const testimonials = [
   {
     quote:

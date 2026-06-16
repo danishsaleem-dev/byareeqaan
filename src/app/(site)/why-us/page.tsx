@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Gift, Layers, MessageCircle, Sparkles, Truck } from "lucide-react";
 import { promises } from "@/lib/site";
 import { PageHeader } from "@/components/site/PageHeader";
+import { Guarantee } from "@/components/site/Guarantee";
 import { Reveal } from "@/components/Reveal";
 import { Testimonials } from "@/components/Testimonials";
 import { Contact } from "@/components/Contact";
@@ -72,6 +73,9 @@ export default function WhyUsPage() {
           })}
         </div>
       </section>
+
+      {/* 100% money-back guarantee */}
+      <Guarantee />
 
       {/* how it works */}
       <section className="mx-auto max-w-6xl px-5 py-20 sm:px-6 sm:py-24">

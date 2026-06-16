@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { getHomepage } from "@/lib/data";
 import { Contact } from "@/components/Contact";
 import { PageHeader } from "@/components/site/PageHeader";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Contact — By Areeqaan",
@@ -8,7 +11,9 @@ export const metadata: Metadata = {
     "Message By Areeqaan on WhatsApp or social media to order, style and ship minimal jewellery anywhere.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const homepage = await getHomepage();
+
   return (
     <main>
       <PageHeader
@@ -20,7 +25,7 @@ export default function ContactPage() {
         }
         subtitle="We're a message away. Reach us on WhatsApp or social and we'll help you pick, style and ship."
       />
-      <Contact />
+      <Contact data={homepage.contact} />
     </main>
   );
 }

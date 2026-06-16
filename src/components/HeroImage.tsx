@@ -7,6 +7,7 @@ import { ArrowUpRight, Sparkles } from "lucide-react";
 import { Leaf } from "./Leaf";
 import { InstagramInvite } from "./InstagramInvite";
 import { site } from "@/lib/site";
+import { gradFor } from "@/lib/format";
 
 const waLink = `https://wa.me/${site.whatsapp.number}`;
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -14,14 +15,14 @@ const ease = [0.16, 1, 0.3, 1] as const;
 type Shot = { src: string; label: string; grad: string };
 
 /**
- * Stock jewellery imagery (Unsplash) purely to preview the look — swap each
- * `src` for your own product photos. A gradient sits behind every tile, so a
- * failed image still renders as an on-brand placeholder.
+ * Stock jewellery imagery (Unsplash) purely to preview the look when no real
+ * photos exist yet. A gradient sits behind every tile, so a failed image still
+ * renders as an on-brand placeholder. Real images are passed via `images`.
  */
 const U = (id: string) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=640&q=80`;
 
-const gallery: Shot[] = [
+const fallbackGallery: Shot[] = [
   { src: U("1515562141207-7a88fb7ce338"), label: "Earrings", grad: "linear-gradient(135deg,#6d28d9,#a78bfa)" },
   { src: U("1611591437281-460bfbe1220a"), label: "Rings", grad: "linear-gradient(135deg,#4c1d95,#8b5cf6)" },
   { src: U("1599643478518-a784e5dc4c8f"), label: "Necklaces", grad: "linear-gradient(135deg,#7c3aed,#c4b5fd)" },
@@ -31,9 +32,6 @@ const gallery: Shot[] = [
   { src: U("1602173574767-37ac01994b2a"), label: "Bands", grad: "linear-gradient(135deg,#7e22ce,#e9d5ff)" },
   { src: U("1611652022419-a9419f74343d"), label: "Chains", grad: "linear-gradient(135deg,#5b21b6,#c084fc)" },
 ];
-
-const colA = gallery.slice(0, 4);
-const colB = gallery.slice(4);
 
 function Tile({
   item,
@@ -54,18 +52,19 @@ function Tile({
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={item.src}
-          alt={`By Areeqaan ${item.label}`}
+          alt={item.label ? `By Areeqaan ${item.label}` : "By Areeqaan"}
           loading={eager ? "eager" : "lazy"}
           draggable={false}
           onError={() => setErr(true)}
           className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
         />
       )}
-      {/* label + cohesion tint */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-violet-deep/45 via-transparent to-transparent" />
-      <span className="pointer-events-none absolute bottom-3 left-3 font-display text-lg text-white drop-shadow">
-        {item.label}
-      </span>
+      {item.label && (
+        <span className="pointer-events-none absolute bottom-3 left-3 font-display text-lg text-white drop-shadow">
+          {item.label}
+        </span>
+      )}
       <div className="pointer-events-none absolute inset-0 rounded-[1.4rem] ring-1 ring-inset ring-white/15" />
     </div>
   );
@@ -82,8 +81,6 @@ function VerticalColumn({
 }) {
   const row = [...items, ...items];
   return (
-    // Track is absolutely anchored to the top of its (full-height) column so
-    // it always fills, regardless of grid row sizing.
     <div
       className={`absolute inset-x-0 top-0 flex flex-col gap-4 ${
         direction === "up" ? "animate-marquee-up" : "animate-marquee-down"
@@ -97,7 +94,20 @@ function VerticalColumn({
   );
 }
 
-export function HeroImage() {
+type HeroConfig = {
+  headline?: string;
+  tagline?: string;
+  ctaText?: string;
+  ctaLink?: string;
+};
+
+export function HeroImage({
+  hero,
+  images,
+}: {
+  hero?: HeroConfig;
+  images?: { src: string; label?: string }[];
+}) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -107,12 +117,43 @@ export function HeroImage() {
   const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
   const yGallery = useTransform(scrollYProgress, [0, 1], [0, -80]);
 
+  const gallery: Shot[] =
+    images && images.length
+      ? images.map((im) => ({
+          src: im.src,
+          label: im.label ?? "",
+          grad: gradFor(im.src),
+        }))
+      : fallbackGallery;
+  const half = Math.ceil(gallery.length / 2);
+  const colA = gallery.slice(0, half);
+  const colB = gallery.slice(half).length ? gallery.slice(half) : colA;
+
+  const headline = hero?.headline?.trim() || "Tiny details. Big statements.";
+  const tagline = hero?.tagline?.trim() || "Trendy · Minimal · Affordable Luxe";
+  const ctaText = hero?.ctaText?.trim() || "Shop the edit";
+  const ctaLink = hero?.ctaLink?.trim() || "/shop";
+  const ctaExternal = /^https?:\/\//.test(ctaLink);
+
+  // Split the headline into lines on sentence boundaries; italicise the last
+  // word of the final line for the brand's signature accent.
+  const lines = headline.split(/(?<=\.)\s+/).map((s) => s.trim()).filter(Boolean);
+  const headlineLines = lines.length ? lines : [headline];
+
+  const ctaInner = (
+    <>
+      {ctaText}
+      <ArrowUpRight
+        size={16}
+        className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+      />
+    </>
+  );
+  const ctaClass =
+    "group inline-flex items-center gap-2 rounded-full bg-violet-deep px-7 py-3.5 text-sm font-medium text-ivory shadow-soft transition-all duration-300 hover:bg-violet hover:shadow-[0_20px_45px_-18px_rgba(109,40,217,0.75)]";
+
   return (
-    <section
-      id="top"
-      ref={ref}
-      className="relative overflow-hidden lg:min-h-[100svh]"
-    >
+    <section id="top" ref={ref} className="relative overflow-hidden lg:min-h-[100svh]">
       {/* ambient field */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-[-10%] top-[-10%] h-[55vh] w-[55vh] rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.32),transparent_65%)] blur-2xl" />
@@ -135,10 +176,22 @@ export function HeroImage() {
           </motion.span>
 
           <h1 className="mt-6 font-display text-[clamp(2.8rem,7.5vw,6rem)] font-medium leading-[0.95] text-ink">
-            <Line delay={0.4}>Tiny details.</Line>
-            <Line delay={0.52}>
-              Big <span className="italic text-gradient">statements.</span>
-            </Line>
+            {headlineLines.map((line, idx) => {
+              const isLast = idx === headlineLines.length - 1;
+              const words = line.split(" ");
+              const last = words.pop() ?? line;
+              const lead = words.join(" ");
+              return (
+                <Line key={idx} delay={0.4 + idx * 0.12}>
+                  {lead ? `${lead} ` : ""}
+                  {isLast ? (
+                    <span className="italic text-gradient">{last}</span>
+                  ) : (
+                    last
+                  )}
+                </Line>
+              );
+            })}
           </h1>
 
           <motion.p
@@ -147,8 +200,7 @@ export function HeroImage() {
             transition={{ duration: 0.9, ease, delay: 0.9 }}
             className="mx-auto mt-6 max-w-md text-base font-medium tracking-wide text-muted sm:text-lg lg:mx-0"
           >
-            Trendy <span className="text-violet/50">·</span> Minimal{" "}
-            <span className="text-violet/50">·</span> Affordable Luxe
+            {tagline}
           </motion.p>
 
           {/* mobile gallery (horizontal) */}
@@ -168,16 +220,15 @@ export function HeroImage() {
             transition={{ duration: 0.9, ease, delay: 1.05 }}
             className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start"
           >
-            <Link
-              href="/shop"
-              className="group inline-flex items-center gap-2 rounded-full bg-violet-deep px-7 py-3.5 text-sm font-medium text-ivory shadow-soft transition-all duration-300 hover:bg-violet hover:shadow-[0_20px_45px_-18px_rgba(109,40,217,0.75)]"
-            >
-              Shop the edit
-              <ArrowUpRight
-                size={16}
-                className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-              />
-            </Link>
+            {ctaExternal ? (
+              <a href={ctaLink} target="_blank" rel="noopener noreferrer" className={ctaClass}>
+                {ctaInner}
+              </a>
+            ) : (
+              <Link href={ctaLink} className={ctaClass}>
+                {ctaInner}
+              </Link>
+            )}
             <a
               href={waLink}
               target="_blank"
@@ -188,10 +239,7 @@ export function HeroImage() {
             </a>
           </motion.div>
 
-          <InstagramInvite
-            delay={1.25}
-            className="mx-auto mt-7 lg:mx-0"
-          />
+          <InstagramInvite delay={1.25} className="mx-auto mt-7 lg:mx-0" />
         </motion.div>
 
         {/* ---------- Gallery (desktop) ---------- */}
@@ -211,7 +259,6 @@ export function HeroImage() {
               <VerticalColumn items={colB} direction="down" duration={48} />
             </div>
           </div>
-          {/* top/bottom fades blend gallery into the page */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-ivory to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-ivory to-transparent" />
         </motion.div>

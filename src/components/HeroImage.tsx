@@ -172,7 +172,7 @@ export function HeroImage({
             transition={{ duration: 0.8, ease, delay: 0.3 }}
             className="inline-flex items-center gap-2 rounded-full border border-violet/20 bg-ivory/60 px-4 py-1.5 text-xs font-medium uppercase tracking-luxe text-violet-deep backdrop-blur"
           >
-            <Sparkles size={13} /> Handpicked jewellery
+            <Sparkles size={13} /> Fashion Accessories
           </motion.span>
 
           <h1 className="mt-6 font-display text-[clamp(2.8rem,7.5vw,6rem)] font-medium leading-[0.95] text-ink">

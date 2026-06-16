@@ -1,26 +1,180 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------ */
+/*  By Areeqaan — design tokens                                        */
+/* ------------------------------------------------------------------ */
+@theme {
+  --color-ivory: #faf6f1;
+  --color-cream: #f1e9df;
+  --color-sand: #e7dccf;
+  --color-ink: #241627;
+  --color-plum: #3a2540;
+  --color-violet: #6d28d9;
+  --color-violet-deep: #4c1d95;
+  --color-violet-bright: #8b5cf6;
+  --color-lilac: #c9b8f0;
+  --color-gold: #c0a06a;
+  --color-gold-soft: #d8c39a;
+  --color-muted: #7c6f80;
+
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-inter);
+
+  --shadow-soft: 0 24px 60px -28px rgba(76, 29, 149, 0.35);
+  --shadow-card: 0 30px 70px -40px rgba(36, 22, 39, 0.55);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-ivory);
+  --foreground: var(--color-ink);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  border-color: color-mix(in srgb, var(--color-plum) 12%, transparent);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* When Lenis is active it adds .lenis to <html> */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+::selection {
+  background: var(--color-violet);
+  color: #fff;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-violet) 60%, var(--color-cream));
+  border-radius: 999px;
+  border: 2px solid var(--color-cream);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Typography helpers                                                 */
+/* ------------------------------------------------------------------ */
+.font-display {
+  font-family: var(--font-display), Georgia, serif;
+}
+.text-balance {
+  text-wrap: balance;
+}
+.tracking-luxe {
+  letter-spacing: 0.32em;
+}
+
+/* Gradient + decorative text */
+.text-gradient {
+  background: linear-gradient(
+    100deg,
+    var(--color-violet-deep),
+    var(--color-violet-bright) 55%,
+    var(--color-gold)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Paper grain overlay */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------ */
+/*  Animations                                                         */
+/* ------------------------------------------------------------------ */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee var(--marquee-duration, 32s) linear infinite;
+}
+
+/* Vertical marquees for the image banner (v2) */
+@keyframes marquee-up {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+@keyframes marquee-down {
+  from { transform: translateY(-50%); }
+  to { transform: translateY(0); }
+}
+.animate-marquee-up {
+  animation: marquee-up var(--marquee-duration, 40s) linear infinite;
+}
+.animate-marquee-down {
+  animation: marquee-down var(--marquee-duration, 40s) linear infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-22px) rotate(4deg);
+  }
+}
+.animate-float {
+  animation: float-slow 9s var(--ease-out-expo) infinite;
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 26s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

@@ -136,7 +136,7 @@ export function MediaPicker({
         </div>
 
         {/* tabs */}
-        <div className="flex gap-1 border-b border-black/[0.06] px-5 pt-3">
+        <div className="flex flex-wrap items-center gap-1 border-b border-black/[0.06] px-5 pt-3">
           {(["library", "upload"] as Tab[]).map((t) => (
             <button
               key={t}
@@ -152,7 +152,7 @@ export function MediaPicker({
             </button>
           ))}
           {tab === "library" && (
-            <div className="relative ml-auto mb-2 w-48">
+            <div className="relative mb-2 w-full sm:ml-auto sm:w-48">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
               <Input
                 value={query}
@@ -231,7 +231,7 @@ export function MediaPicker({
                       onClick={() => remove(f)}
                       disabled={pending}
                       title="Delete from library"
-                      className="absolute left-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-md bg-white/90 text-red-600 opacity-0 shadow transition-opacity hover:bg-white group-hover:opacity-100"
+                      className="absolute left-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-md bg-white/90 text-red-600 opacity-100 shadow transition-opacity hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
                     >
                       <Trash2 size={13} />
                     </button>

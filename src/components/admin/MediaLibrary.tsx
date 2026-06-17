@@ -115,7 +115,7 @@ export function MediaLibrary({ initial }: { initial: MediaFile[] }) {
       </div>
 
       {/* Files + detail */}
-      <div className="flex gap-5">
+      <div className="flex flex-col gap-5 lg:flex-row">
         <div className="flex-1">
           {shown.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-black/10 p-12 text-center text-sm text-muted">
@@ -167,8 +167,8 @@ export function MediaLibrary({ initial }: { initial: MediaFile[] }) {
 
         {/* Detail sidebar */}
         {selected && (
-          <aside className="w-72 shrink-0">
-            <div className="sticky top-6 rounded-2xl border border-black/[0.06] bg-white p-4">
+          <aside className="w-full shrink-0 lg:w-72">
+            <div className="rounded-2xl border border-black/[0.06] bg-white p-4 lg:sticky lg:top-6">
               <div className="mb-3 flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-ink">Details</h3>
                 <button onClick={() => setSelected(null)} className="text-muted hover:text-ink">

@@ -4,6 +4,7 @@ import { ExternalLink, LogOut } from "lucide-react";
 import { isAuthenticated } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { Sidebar } from "@/components/admin/Sidebar";
+import { MobileNav } from "@/components/admin/MobileNav";
 import { SetupNotice } from "@/components/admin/SetupNotice";
 import { logoutAction } from "@/app/admin/actions";
 
@@ -46,11 +47,14 @@ export default async function DashboardLayout({
       </aside>
 
       {/* Main */}
-      <main className="flex-1 px-5 py-6 sm:px-8 sm:py-8">
-        <div className="mx-auto max-w-6xl">
-          {configured ? children : <SetupNotice />}
-        </div>
-      </main>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <MobileNav />
+        <main className="px-4 py-5 sm:px-8 sm:py-8">
+          <div className="mx-auto max-w-6xl">
+            {configured ? children : <SetupNotice />}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

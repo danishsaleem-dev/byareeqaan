@@ -65,7 +65,7 @@ export function CollectionsManager({ initial }: { initial: Collection[] }) {
                     <FolderOpen size={32} />
                   </div>
                 )}
-                <div className="absolute right-2 top-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="absolute right-2 top-2 flex gap-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
                   <button
                     onClick={() => setEditing({ mode: "edit", collection: c })}
                     className="rounded-lg bg-white/90 p-1.5 text-plum shadow hover:text-violet-deep"

@@ -301,7 +301,7 @@ export function ProductForm({
                         Primary
                       </span>
                     )}
-                    <div className="absolute inset-x-1.5 bottom-1.5 flex justify-between opacity-0 transition-opacity group-hover:opacity-100">
+                    <div className="absolute inset-x-1.5 bottom-1.5 flex justify-between opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
                       {!img.primary && (
                         <button
                           onClick={() => setPrimary(img.url)}

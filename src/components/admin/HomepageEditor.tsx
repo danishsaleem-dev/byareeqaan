@@ -44,7 +44,7 @@ export function HomepageEditor({ initial }: { initial: HomepageConfig }) {
                         <img src={url} alt="" className="h-full w-full object-cover" />
                         <button
                           onClick={() => set({ ...value, images: value.images.filter((u) => u !== url) })}
-                          className="absolute right-1 top-1 rounded bg-white/90 p-0.5 text-red-600 opacity-0 shadow group-hover:opacity-100"
+                          className="absolute right-1 top-1 rounded bg-white/90 p-0.5 text-red-600 opacity-100 shadow sm:opacity-0 sm:group-hover:opacity-100"
                         >
                           <X size={13} />
                         </button>

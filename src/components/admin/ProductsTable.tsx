@@ -106,51 +106,55 @@ export function ProductsTable({ initial }: { initial: Product[] }) {
         ) : (
           <ul className="divide-y divide-black/[0.06]">
             {shown.map((p) => (
-              <li key={p.id} className="flex items-center gap-4 px-4 py-3">
-                <Thumb url={p.images.find((i) => i.primary)?.url ?? p.images[0]?.url} />
-                <Link
-                  href={`/admin/products/${p.id}`}
-                  className="min-w-0 flex-1"
-                >
-                  <span className="block truncate font-medium text-ink hover:text-violet-deep">
-                    {p.name}
-                  </span>
-                  <span className="text-sm text-muted">
-                    Rs {p.price.toLocaleString()}
-                    {p.sku && <span className="ml-2 text-muted/70">· {p.sku}</span>}
-                  </span>
-                </Link>
+              <li
+                key={p.id}
+                className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:gap-4"
+              >
+                <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <Thumb url={p.images.find((i) => i.primary)?.url ?? p.images[0]?.url} />
+                  <Link href={`/admin/products/${p.id}`} className="min-w-0 flex-1">
+                    <span className="block truncate font-medium text-ink hover:text-violet-deep">
+                      {p.name}
+                    </span>
+                    <span className="text-sm text-muted">
+                      Rs {p.price.toLocaleString()}
+                      {p.sku && <span className="ml-2 text-muted/70">· {p.sku}</span>}
+                    </span>
+                  </Link>
+                </div>
 
-                <button
-                  onClick={() => toggleFeatured(p.id, !p.featured)}
-                  title={p.featured ? "Featured" : "Mark featured"}
-                  className={clsx(
-                    "rounded-lg p-1.5 transition-colors",
-                    p.featured ? "text-gold" : "text-black/20 hover:text-gold/70",
-                  )}
-                >
-                  <Star size={17} fill={p.featured ? "currentColor" : "none"} />
-                </button>
+                <div className="flex items-center justify-between gap-2 sm:justify-end">
+                  <button
+                    onClick={() => toggleFeatured(p.id, !p.featured)}
+                    title={p.featured ? "Featured" : "Mark featured"}
+                    className={clsx(
+                      "rounded-lg p-1.5 transition-colors",
+                      p.featured ? "text-gold" : "text-black/20 hover:text-gold/70",
+                    )}
+                  >
+                    <Star size={17} fill={p.featured ? "currentColor" : "none"} />
+                  </button>
 
-                <StatusBadge status={p.status} />
+                  <StatusBadge status={p.status} />
 
-                <select
-                  value={p.status}
-                  onChange={(e) => changeStatus(p.id, e.target.value as ProductStatus)}
-                  className="cursor-pointer rounded-lg border border-black/10 bg-white px-2 py-1.5 text-xs text-plum outline-none focus:border-violet"
-                >
-                  <option value="published">Publish</option>
-                  <option value="draft">Draft</option>
-                  <option value="archived">Archive</option>
-                </select>
+                  <select
+                    value={p.status}
+                    onChange={(e) => changeStatus(p.id, e.target.value as ProductStatus)}
+                    className="cursor-pointer rounded-lg border border-black/10 bg-white px-2 py-1.5 text-xs text-plum outline-none focus:border-violet"
+                  >
+                    <option value="published">Publish</option>
+                    <option value="draft">Draft</option>
+                    <option value="archived">Archive</option>
+                  </select>
 
-                <button
-                  onClick={() => remove(p)}
-                  className="rounded-lg p-1.5 text-black/30 transition-colors hover:bg-red-50 hover:text-red-600"
-                  title="Delete"
-                >
-                  <Trash2 size={17} />
-                </button>
+                  <button
+                    onClick={() => remove(p)}
+                    className="rounded-lg p-1.5 text-black/30 transition-colors hover:bg-red-50 hover:text-red-600"
+                    title="Delete"
+                  >
+                    <Trash2 size={17} />
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

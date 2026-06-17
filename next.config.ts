@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
   // Smaller client bundles → lower TBT. Pull only what's used from big barrels.
   experimental: {
     optimizePackageImports: ["lucide-react", "motion"],
+    serverActions: {
+      bodySizeLimit: "50mb",
+    },
   },
   poweredByHeader: false,
 };

@@ -13,9 +13,11 @@ import {
   ImageOff,
   X,
   Search,
+  FolderOpen,
 } from "lucide-react";
 import { Card, Field, Input, Textarea, Select, Button, Toggle } from "./ui";
 import { Uploader } from "./Uploader";
+import { MediaPicker } from "./MediaPicker";
 import { slugify } from "@/lib/slug";
 import {
   saveProductAction,
@@ -69,6 +71,8 @@ export function ProductForm({
   const [seoTitle, setSeoTitle] = useState(product?.seoTitle ?? "");
   const [seoDesc, setSeoDesc] = useState(product?.seoDesc ?? "");
 
+  const [picker, setPicker] = useState<null | "image" | "video">(null);
+
   const [collections, setCollections] = useState(initialCollections);
   const [collectionIds, setCollectionIds] = useState<string[]>(
     product?.collectionIds ?? [],
@@ -95,6 +99,15 @@ export function ProductForm({
     setImages((prev) => {
       const next = prev.filter((i) => i.url !== url);
       if (!next.some((i) => i.primary) && next[0]) next[0].primary = true;
+      return next;
+    });
+  }
+  function addVideos(files: MediaFile[]) {
+    setVideos((prev) => {
+      const next = [...prev];
+      for (const f of files) {
+        if (f.type === "video" && !next.includes(f.url)) next.push(f.url);
+      }
       return next;
     });
   }
@@ -261,7 +274,16 @@ export function ProductForm({
 
           {/* Images */}
           <Card className="space-y-3">
-            <h3 className="text-sm font-semibold text-ink">Images</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-ink">Images</h3>
+              <Button
+                variant="secondary"
+                onClick={() => setPicker("image")}
+                className="px-3 py-1.5 text-xs"
+              >
+                <FolderOpen size={14} /> Choose from library
+              </Button>
+            </div>
             {images.length > 0 && (
               <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
                 {images.map((img) => (
@@ -306,7 +328,16 @@ export function ProductForm({
 
           {/* Videos */}
           <Card className="space-y-3">
-            <h3 className="text-sm font-semibold text-ink">Videos</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-ink">Videos</h3>
+              <Button
+                variant="secondary"
+                onClick={() => setPicker("video")}
+                className="px-3 py-1.5 text-xs"
+              >
+                <FolderOpen size={14} /> Choose from library
+              </Button>
+            </div>
             {videos.length > 0 && (
               <ul className="space-y-2">
                 {videos.map((v) => (
@@ -454,6 +485,16 @@ export function ProductForm({
           )}
         </div>
       </div>
+
+      {picker && (
+        <MediaPicker
+          accept={picker}
+          onClose={() => setPicker(null)}
+          onSelect={(picked) =>
+            picker === "image" ? addImages(picked) : addVideos(picked)
+          }
+        />
+      )}
     </div>
   );
 }

@@ -22,18 +22,24 @@ import {
   createMedia,
   deleteMedia,
   getMedia,
+  listMedia,
   getHomepage,
   saveHomepage,
   getSite,
   saveSite,
 } from "@/lib/data";
-import { uploadToStorage, deleteFromStorage } from "@/lib/storage";
+import {
+  uploadToStorage,
+  deleteFromStorage,
+  createSignedUpload,
+} from "@/lib/storage";
 import {
   type ProductInput,
   type ProductStatus,
   type ProductPayload,
   type CollectionPayload,
   type Collection,
+  type MediaFile,
   type HomepageConfig,
   type SiteConfig,
 } from "@/lib/types";
@@ -189,6 +195,53 @@ export async function deleteMediaAction(id: string) {
     await deleteMedia(id);
   }
   revalidateAdmin();
+}
+
+/** List all library media (admin-gated). */
+export async function listMediaAction(): Promise<MediaFile[]> {
+  await requireAuth();
+  return listMedia();
+}
+
+/**
+ * Step 1 of a direct upload: mint a signed upload URL. The browser then PUTs the
+ * file straight to Storage, so large videos never hit the Server Action body cap.
+ */
+export async function createUploadUrlAction(
+  filename: string,
+  contentType: string,
+): Promise<
+  | { ok: true; path: string; token: string; publicUrl: string }
+  | { ok: false; error: string }
+> {
+  await requireAuth();
+  try {
+    const { path, token, publicUrl } = await createSignedUpload(
+      filename,
+      contentType,
+    );
+    return { ok: true, path, token, publicUrl };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+/** Step 2 of a direct upload: record the uploaded file in the media library. */
+export async function recordMediaAction(meta: {
+  filename: string;
+  url: string;
+  path: string;
+  type: "image" | "video";
+  size: number;
+}): Promise<{ ok: boolean; file?: MediaFile; error?: string }> {
+  await requireAuth();
+  try {
+    const file = await createMedia(meta);
+    revalidateAdmin();
+    return { ok: true, file };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
 }
 
 // ── homepage & site settings ──────────────────────────────────

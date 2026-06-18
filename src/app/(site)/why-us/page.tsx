@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Gift, Layers, MessageCircle, Sparkles, Truck } from "lucide-react";
 import { promises } from "@/lib/site";
+import { listTestimonials } from "@/lib/testimonials";
 import { PageHeader } from "@/components/site/PageHeader";
 import { Guarantee } from "@/components/site/Guarantee";
 import { Reveal } from "@/components/Reveal";
@@ -34,7 +35,8 @@ const steps = [
   },
 ];
 
-export default function WhyUsPage() {
+export default async function WhyUsPage() {
+  const testimonials = await listTestimonials(true);
   return (
     <main>
       <PageHeader
@@ -110,7 +112,7 @@ export default function WhyUsPage() {
         </div>
       </section>
 
-      <Testimonials />
+      <Testimonials items={testimonials} />
       <Contact />
     </main>
   );

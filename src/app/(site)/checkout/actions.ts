@@ -2,7 +2,7 @@
 
 import { createOrder } from "@/lib/orders";
 import { createSupabaseServer } from "@/lib/supabase/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase";
 import type { CreateOrderInput, OrderItem, PaymentMethod } from "@/lib/types";
 
 export interface PlaceOrderInput {
@@ -43,7 +43,7 @@ export async function createScreenshotUploadAction(
 ): Promise<{ path: string; token: string }> {
   const ext = filename.split(".").pop() ?? "jpg";
   const path = `screenshots/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  const sb = supabase();
+  const sb = supabaseAdmin();
   const { data, error } = await sb.storage
     .from("media")
     .createSignedUploadUrl(path);
@@ -53,7 +53,7 @@ export async function createScreenshotUploadAction(
 
 /** Convert a storage path to a public URL. */
 export async function getScreenshotUrlAction(path: string): Promise<string> {
-  const sb = supabase();
+  const sb = supabaseAdmin();
   const { data } = sb.storage.from("media").getPublicUrl(path);
   return data.publicUrl;
 }

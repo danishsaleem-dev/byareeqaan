@@ -1,5 +1,5 @@
 import "server-only";
-import { supabase } from "./supabase";
+import { supabaseAdmin } from "./supabase";
 import { createSupabaseServer } from "./supabase/server";
 import type {
   Order,
@@ -35,7 +35,7 @@ function toOrder(r: any): Order {
 
 /** Create a new order (service-role, bypasses RLS — works for guests too). */
 export async function createOrder(input: CreateOrderInput): Promise<Order> {
-  const sb = supabase();
+  const sb = supabaseAdmin();
   const { data, error } = await sb
     .from("orders")
     .insert({
@@ -59,7 +59,7 @@ export async function createOrder(input: CreateOrderInput): Promise<Order> {
 
 /** Fetch a single order by ID (service-role). */
 export async function getOrder(id: string): Promise<Order | null> {
-  const sb = supabase();
+  const sb = supabaseAdmin();
   const { data, error } = await sb
     .from("orders")
     .select("*")
@@ -71,7 +71,7 @@ export async function getOrder(id: string): Promise<Order | null> {
 
 /** All orders for a user, newest first. */
 export async function listUserOrders(userId: string): Promise<Order[]> {
-  const sb = supabase();
+  const sb = supabaseAdmin();
   const { data, error } = await sb
     .from("orders")
     .select("*")

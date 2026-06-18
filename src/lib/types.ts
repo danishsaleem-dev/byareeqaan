@@ -72,6 +72,27 @@ export type CollectionInput = Omit<
   "id" | "createdAt" | "updatedAt"
 >;
 
+// ── Customer accounts ─────────────────────────────────────────
+export interface Profile {
+  id: string;
+  fullName: string;
+  phone: string;
+  email: string;
+}
+
+export interface Address {
+  id: string;
+  fullName: string;
+  phone: string;
+  address: string;
+  city: string;
+  country: string;
+  isDefault: boolean;
+  createdAt: string;
+}
+
+export type AddressInput = Omit<Address, "id" | "createdAt">;
+
 export interface MediaFile {
   id: string;
   filename: string;

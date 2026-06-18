@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
-import { Menu, X, ShoppingBag } from "lucide-react";
+import { Menu, X, ShoppingBag, User } from "lucide-react";
 import { Logo } from "./Logo";
 import { useBag } from "@/lib/bag";
 import { site } from "@/lib/site";
@@ -69,6 +69,13 @@ export function Navbar() {
           >
             Order on WhatsApp
           </a>
+          <Link
+            href="/account"
+            aria-label="My account"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cream text-plum transition-colors hover:text-violet-deep"
+          >
+            <User size={18} />
+          </Link>
           <button
             onClick={openBag}
             aria-label={`Open bag${count ? ` (${count} items)` : ""}`}
@@ -111,6 +118,15 @@ export function Navbar() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  href="/account"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 rounded-2xl px-4 py-3 font-display text-2xl text-plum transition-colors hover:bg-cream"
+                >
+                  <User size={20} /> My account
+                </Link>
+              </li>
             </ul>
             <a
               href={waLink}

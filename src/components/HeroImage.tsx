@@ -274,7 +274,7 @@ export function HeroImage({
               <VerticalColumn items={colA} direction="up" duration={18} />
             </div>
             <div className="relative overflow-hidden">
-              <VerticalColumn items={colB} direction="down" duration={22} />
+              <VerticalColumn items={colB} direction="down" duration={18} />
             </div>
           </div>
           <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-ivory to-transparent" />

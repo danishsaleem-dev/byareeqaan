@@ -57,3 +57,16 @@ export async function getScreenshotUrlAction(path: string): Promise<string> {
   const { data } = sb.storage.from("media").getPublicUrl(path);
   return data.publicUrl;
 }
+
+/** Attach a payment screenshot URL to an existing order. */
+export async function addOrderScreenshotAction(
+  orderId: string,
+  screenshotUrl: string,
+): Promise<void> {
+  const sb = supabaseAdmin();
+  const { error } = await sb
+    .from("orders")
+    .update({ payment_screenshot_url: screenshotUrl, status: "payment_review" })
+    .eq("id", orderId);
+  if (error) throw error;
+}

@@ -13,6 +13,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import { formatPrice, gradFor } from "@/lib/format";
+import { UploadScreenshotForm } from "@/components/site/UploadScreenshotForm";
 import type { Order, OrderStatus } from "@/lib/types";
 import { useState } from "react";
 
@@ -235,28 +236,19 @@ export function OrderConfirmation({ order }: { order: Order }) {
               </div>
             ))}
           </dl>
-          <p className="mt-4 text-xs text-muted">
-            After transferring, send the screenshot to us on{" "}
-            <a
-              href="https://wa.me/923364246604"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-violet underline"
-            >
-              WhatsApp
-            </a>{" "}
-            or{" "}
-            <a
-              href="https://instagram.com/byareeqaan"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-violet underline"
-            >
-              Instagram
-            </a>{" "}
-            mentioning your order number{" "}
-            <strong className="text-plum">{order.orderNumber}</strong>.
-          </p>
+          <div className="mt-5 border-t border-violet/15 pt-5">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-violet">
+              Upload your payment screenshot
+            </p>
+            <p className="mb-3 text-xs text-muted">
+              Upload here directly — or send it on{" "}
+              <a href="https://wa.me/923364246604" target="_blank" rel="noopener noreferrer" className="font-medium text-violet underline">WhatsApp</a>
+              {" "}or{" "}
+              <a href="https://instagram.com/byareeqaan" target="_blank" rel="noopener noreferrer" className="font-medium text-violet underline">Instagram</a>
+              {" "}with your order number <strong className="text-plum">{order.orderNumber}</strong>.
+            </p>
+            <UploadScreenshotForm orderId={order.id} />
+          </div>
         </motion.section>
       )}
 

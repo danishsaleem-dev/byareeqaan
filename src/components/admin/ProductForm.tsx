@@ -283,7 +283,18 @@ export function ProductForm({
             <div className="grid gap-4 sm:grid-cols-2">
               <Field
                 label="Cost price (Rs)"
-                hint={<span className="text-muted">private · for profit</span>}
+                hint={
+                  (() => {
+                    const c = Number(cost);
+                    const p = Number(price);
+                    if (!c || !p || c <= 0 || p <= 0) return <span className="text-muted">private · for profit tracking</span>;
+                    const profit = p - c;
+                    const margin = Math.round((profit / p) * 100);
+                    return profit >= 0
+                      ? <span className="font-semibold text-emerald-600">+Rs {profit.toLocaleString()} profit · {margin}% margin</span>
+                      : <span className="font-semibold text-rose-600">Rs {Math.abs(profit).toLocaleString()} loss</span>;
+                  })()
+                }
               >
                 <Input type="number" value={cost} onChange={(e) => setCost(e.target.value)} placeholder="what it cost you" />
               </Field>

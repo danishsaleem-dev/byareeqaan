@@ -89,19 +89,9 @@ export default async function AccountOverviewPage() {
         )}
       </section>
 
-      {/* Wishlist — coming soon */}
-      <div className="rounded-2xl border border-dashed border-plum/15 bg-cream/30 p-5">
-        <span className="flex items-center gap-2 text-sm font-semibold text-plum/70">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-plum/5 text-plum/50">
-            <Heart size={18} />
-          </span>
-          Wishlist
-          <span className="ml-auto rounded-full bg-cream px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
-            Soon
-          </span>
-        </span>
-        <p className="mt-3 text-sm text-muted">Save pieces you love for later.</p>
-      </div>
+      <Card href="/account/wishlist" icon={<Heart size={18} />} title="Wishlist">
+        <p className="text-sm text-muted">Pieces you&apos;ve saved for later.</p>
+      </Card>
     </div>
   );
 }

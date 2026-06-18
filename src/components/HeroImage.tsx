@@ -223,7 +223,7 @@ export function HeroImage({
 
           {/* mobile gallery (horizontal) */}
           <div className="relative mt-9 -mx-6 overflow-hidden lg:hidden">
-            <div className="flex w-max animate-marquee gap-3 px-6 [--marquee-duration:38s]">
+            <div className="flex w-max animate-marquee gap-3 px-6 [--marquee-duration:16s]">
               {[...gallery, ...gallery].map((item, i) => (
                 <Tile key={i} item={item} className="aspect-[4/5] w-36 shrink-0" />
               ))}
@@ -271,10 +271,10 @@ export function HeroImage({
           <Leaf className="absolute -left-6 top-1/4 z-10 h-40 w-auto text-violet/20" />
           <div className="absolute inset-0 grid grid-cols-2 gap-4">
             <div className="relative overflow-hidden">
-              <VerticalColumn items={colA} direction="up" duration={42} />
+              <VerticalColumn items={colA} direction="up" duration={18} />
             </div>
             <div className="relative overflow-hidden">
-              <VerticalColumn items={colB} direction="down" duration={48} />
+              <VerticalColumn items={colB} direction="down" duration={22} />
             </div>
           </div>
           <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-ivory to-transparent" />

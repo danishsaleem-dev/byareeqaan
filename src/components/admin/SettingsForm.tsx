@@ -2,7 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { Check, FolderOpen, X } from "lucide-react";
-import { Card, Field, Input, Textarea, Button } from "./ui";
+import { Card, Field, Fieldset, Input, Textarea, Button } from "./ui";
 import { Uploader } from "./Uploader";
 import { MediaPicker } from "./MediaPicker";
 import { saveSiteGroupAction } from "@/app/admin/actions";
@@ -73,13 +73,13 @@ function ImagePick({
   onChange: (url: string) => void;
 }) {
   return (
-    <Field label={label}>
+    <Fieldset label={label}>
       <div className="space-y-2">
         {url && (
           <div className="relative inline-block">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={url} alt="" className="h-16 w-auto rounded-lg border border-black/[0.06] bg-white object-contain p-1" />
-            <button onClick={() => onChange("")} className="absolute -right-2 -top-2 rounded-full bg-white p-0.5 text-red-600 shadow">
+            <button type="button" onClick={() => onChange("")} className="absolute -right-2 -top-2 rounded-full bg-white p-0.5 text-red-600 shadow">
               <X size={14} />
             </button>
           </div>
@@ -89,7 +89,7 @@ function ImagePick({
           <LibraryPickerBtn onSelect={onChange} />
         </div>
       </div>
-    </Field>
+    </Fieldset>
   );
 }
 

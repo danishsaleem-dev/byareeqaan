@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { Plus, Trash2, Eye, EyeOff, Edit2, Check, X } from "lucide-react";
-import { Card, Field, Input, Textarea, Button, Toggle } from "./ui";
+import { Card, Field, Fieldset, Input, Textarea, Button, Toggle } from "./ui";
 import { Uploader } from "./Uploader";
 import { MediaPicker } from "./MediaPicker";
 import {
@@ -123,7 +123,7 @@ function TestimonialForm({
       </Field>
 
       {needsMedia && (
-        <Field label={form.sourceType === "video" ? "Video" : "Screenshot"} hint="upload or pick from library">
+        <Fieldset label={form.sourceType === "video" ? "Video" : "Screenshot"} hint="upload or pick from library">
           {form.mediaUrl && (
             <div className="relative mb-2 inline-block">
               {form.mediaType === "video" ? (
@@ -160,7 +160,7 @@ function TestimonialForm({
               From library
             </button>
           </div>
-        </Field>
+        </Fieldset>
       )}
 
       <div className="flex items-center justify-between">

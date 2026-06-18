@@ -17,6 +17,7 @@ import {
 import { useBag } from "@/lib/bag";
 import { formatPrice, gradFor } from "@/lib/format";
 import { createSupabaseBrowser } from "@/lib/supabase/client";
+import { compressImage } from "@/lib/image-compress";
 import {
   placeOrderAction,
   createScreenshotUploadAction,
@@ -161,14 +162,13 @@ export function CheckoutForm({
     try {
       if (screenshot) {
         setStatus("uploading");
-        const { path, token } = await createScreenshotUploadAction(
-          screenshot.name,
-        );
+        const shot = await compressImage(screenshot);
+        const { path, token } = await createScreenshotUploadAction(shot.name);
         const sb = createSupabaseBrowser();
         const { error: upErr } = await sb.storage
           .from("media")
-          .uploadToSignedUrl(path, token, screenshot, {
-            contentType: screenshot.type,
+          .uploadToSignedUrl(path, token, shot, {
+            contentType: shot.type,
           });
         if (upErr) throw upErr;
         screenshotUrl = await getScreenshotUrlAction(path);

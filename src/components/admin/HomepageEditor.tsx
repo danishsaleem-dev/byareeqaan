@@ -2,7 +2,7 @@
 
 import { useState, useTransition, type ReactNode } from "react";
 import { Check, FolderOpen, Plus, X } from "lucide-react";
-import { Card, Field, Input, Textarea, Button, Toggle } from "./ui";
+import { Card, Field, Fieldset, Input, Textarea, Button, Toggle } from "./ui";
 import { Uploader } from "./Uploader";
 import { MediaPicker } from "./MediaPicker";
 import { saveHomepageSectionAction } from "@/app/admin/actions";
@@ -68,7 +68,7 @@ export function HomepageEditor({ initial }: { initial: HomepageConfig }) {
       <Section<"hero"> title="Hero section" section="hero" initial={initial.hero}>
         {(value, set) => (
           <>
-            <Field label="Slideshow images">
+            <Fieldset label="Slideshow images">
               <div className="space-y-2">
                 {value.images.length > 0 && (
                   <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
@@ -77,6 +77,7 @@ export function HomepageEditor({ initial }: { initial: HomepageConfig }) {
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={url} alt="" className="h-full w-full object-cover" />
                         <button
+                          type="button"
                           onClick={() => set({ ...value, images: value.images.filter((u) => u !== url) })}
                           className="absolute right-1 top-1 rounded bg-white/90 p-0.5 text-red-600 opacity-100 shadow sm:opacity-0 sm:group-hover:opacity-100"
                         >
@@ -99,7 +100,7 @@ export function HomepageEditor({ initial }: { initial: HomepageConfig }) {
                   />
                 </div>
               </div>
-            </Field>
+            </Fieldset>
             <Field label="Headline"><Input value={value.headline} onChange={(e) => set({ ...value, headline: e.target.value })} /></Field>
             <Field label="Subheadline"><Input value={value.subheadline} onChange={(e) => set({ ...value, subheadline: e.target.value })} /></Field>
             <Field label="Tagline"><Input value={value.tagline} onChange={(e) => set({ ...value, tagline: e.target.value })} /></Field>
@@ -137,13 +138,13 @@ export function HomepageEditor({ initial }: { initial: HomepageConfig }) {
       <Section<"story"> title="Brand story" section="story" initial={initial.story}>
         {(value, set) => (
           <>
-            <Field label="Image">
+            <Fieldset label="Image">
               <div className="space-y-2">
                 {value.image && (
                   <div className="relative aspect-[16/9] max-w-sm overflow-hidden rounded-xl border border-black/[0.06]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={value.image} alt="" className="h-full w-full object-cover" />
-                    <button onClick={() => set({ ...value, image: "" })} className="absolute right-2 top-2 rounded bg-white/90 p-1 text-red-600 shadow">
+                    <button type="button" onClick={() => set({ ...value, image: "" })} className="absolute right-2 top-2 rounded bg-white/90 p-1 text-red-600 shadow">
                       <X size={14} />
                     </button>
                   </div>
@@ -153,7 +154,7 @@ export function HomepageEditor({ initial }: { initial: HomepageConfig }) {
                   <PickerButton multiple={false} onSelect={(urls) => urls[0] && set({ ...value, image: urls[0] })} />
                 </div>
               </div>
-            </Field>
+            </Fieldset>
             <Field label="Title"><Input value={value.title} onChange={(e) => set({ ...value, title: e.target.value })} /></Field>
             <Field label="Content"><Textarea value={value.content} onChange={(e) => set({ ...value, content: e.target.value })} rows={4} /></Field>
           </>

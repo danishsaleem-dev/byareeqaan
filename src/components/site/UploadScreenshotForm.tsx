@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, CheckCircle2 } from "lucide-react";
 import { createSupabaseBrowser } from "@/lib/supabase/client";
+import { compressImage } from "@/lib/image-compress";
 import {
   createScreenshotUploadAction,
   getScreenshotUrlAction,
@@ -17,11 +18,12 @@ export function UploadScreenshotForm({ orderId }: { orderId: string }) {
   const [status, setStatus] = useState<"idle" | "uploading" | "done" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
 
-  async function handleFile(file: File) {
-    setPreview(URL.createObjectURL(file));
+  async function handleFile(rawFile: File) {
+    setPreview(URL.createObjectURL(rawFile));
     setStatus("uploading");
     setError(null);
     try {
+      const file = await compressImage(rawFile);
       const { path, token } = await createScreenshotUploadAction(file.name);
       const sb = createSupabaseBrowser();
       const { error: upErr } = await sb.storage

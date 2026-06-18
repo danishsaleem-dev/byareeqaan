@@ -77,6 +77,36 @@ export function Field({
   );
 }
 
+/**
+ * Same look as <Field> but renders a <div>, not a <label>. Use this whenever the
+ * body contains its own interactive controls (image grids, remove buttons,
+ * pickers) — a <label> would forward stray clicks to the first control inside
+ * it and silently fire remove/upload actions.
+ */
+export function Fieldset({
+  label,
+  hint,
+  children,
+  className,
+}: {
+  label?: string;
+  hint?: ReactNode;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={clsx("block", className)}>
+      {label && (
+        <span className="mb-1.5 flex items-center justify-between text-[13px] font-medium text-plum">
+          {label}
+          {hint && <span className="text-xs font-normal text-muted">{hint}</span>}
+        </span>
+      )}
+      {children}
+    </div>
+  );
+}
+
 const inputCls =
   "w-full rounded-xl border border-black/10 bg-white px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-violet focus:ring-2 focus:ring-violet/15";
 

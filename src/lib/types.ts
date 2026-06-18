@@ -93,6 +93,63 @@ export interface Address {
 
 export type AddressInput = Omit<Address, "id" | "createdAt">;
 
+// ── Orders ────────────────────────────────────────────────────
+export type OrderStatus =
+  | "pending_payment"
+  | "payment_review"
+  | "confirmed"
+  | "packed"
+  | "shipped"
+  | "delivered"
+  | "cancelled";
+
+export type PaymentMethod = "faisal_bank" | "nayapay" | "easypaisa";
+
+export interface OrderItem {
+  productId: string;
+  slug: string;
+  name: string;
+  image?: string;
+  price: number;
+  variantId?: string;
+  variantTitle?: string;
+  qty: number;
+}
+
+export interface Order {
+  id: string;
+  orderNumber: string;
+  userId: string | null;
+  email: string;
+  fullName: string;
+  phone: string;
+  address: string;
+  city: string;
+  country: string;
+  items: OrderItem[];
+  subtotal: number;
+  paymentMethod: PaymentMethod;
+  paymentScreenshotUrl: string | null;
+  status: OrderStatus;
+  adminNotes: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateOrderInput {
+  userId?: string;
+  email: string;
+  fullName: string;
+  phone: string;
+  address: string;
+  city: string;
+  country: string;
+  items: OrderItem[];
+  subtotal: number;
+  paymentMethod: PaymentMethod;
+  paymentScreenshotUrl?: string;
+}
+
 export interface MediaFile {
   id: string;
   filename: string;

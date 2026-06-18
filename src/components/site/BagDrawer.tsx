@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { Minus, Plus, Trash2, X, ShoppingBag } from "lucide-react";
+import { Minus, Plus, Trash2, X, ShoppingBag, ArrowRight } from "lucide-react";
 import { useBag } from "@/lib/bag";
-import { formatPrice, bagWaLink, gradFor } from "@/lib/format";
-import { WhatsAppIcon } from "@/components/BrandIcons";
+import { formatPrice, gradFor } from "@/lib/format";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -181,14 +180,13 @@ export function BagDrawer() {
                   <p className="mb-3 text-[11px] text-muted">
                     Shipping calculated at checkout · free over Rs 5,000 in Pakistan
                   </p>
-                  <a
-                    href={bagWaLink(items, subtotal)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex w-full items-center justify-center gap-2 rounded-full bg-violet-deep px-6 py-3.5 text-sm font-medium text-ivory shadow-soft transition-colors hover:bg-violet"
+                  <Link
+                    href="/checkout"
+                    onClick={close}
+                    className="flex w-full items-center justify-center gap-2 rounded-full bg-violet-deep px-6 py-3.5 text-sm font-semibold text-ivory shadow-soft transition-colors hover:bg-violet"
                   >
-                    <WhatsAppIcon size={18} /> Checkout on WhatsApp
-                  </a>
+                    Checkout <ArrowRight size={16} />
+                  </Link>
                   <button
                     onClick={close}
                     className="mt-2 w-full rounded-full px-6 py-2.5 text-sm font-medium text-plum transition-colors hover:text-violet-deep"

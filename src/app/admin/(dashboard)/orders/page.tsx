@@ -32,7 +32,7 @@ export default async function AdminOrdersPage({
         <h1 className="font-display text-3xl font-semibold text-ink">Orders</h1>
         <p className="mt-1 text-sm text-muted">
           {orders.length} order{orders.length !== 1 ? "s" : ""}
-          {statusFilter ? ` · filtered by ${STATUS_META[statusFilter]?.label}` : ""}
+          {statusFilter ? ` · filtered by ${statusFilter.replace(/_/g, " ")}` : ""}
         </p>
       </header>
 

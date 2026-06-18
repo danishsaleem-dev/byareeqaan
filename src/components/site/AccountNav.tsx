@@ -9,7 +9,7 @@ const links = [
   { href: "/account", label: "Overview", icon: LayoutDashboard, exact: true },
   { href: "/account/profile", label: "My details", icon: User },
   { href: "/account/addresses", label: "Addresses", icon: MapPin },
-  { href: "/account/orders", label: "Orders", icon: Package, soon: true },
+  { href: "/account/orders", label: "Orders", icon: Package },
   { href: "/account/wishlist", label: "Wishlist", icon: Heart, soon: true },
 ];
 

@@ -90,3 +90,65 @@ export async function listMyOrders(): Promise<Order[]> {
   if (!user) return [];
   return listUserOrders(user.id);
 }
+
+/** All orders across all customers (admin). */
+export async function listAllOrders(status?: OrderStatus): Promise<Order[]> {
+  const sb = supabaseAdmin();
+  let q = sb.from("orders").select("*").order("created_at", { ascending: false });
+  if (status) q = q.eq("status", status);
+  const { data, error } = await q;
+  if (error) throw error;
+  return (data ?? []).map(toOrder);
+}
+
+/** Update order status + optional admin note (admin). */
+export async function updateOrderStatus(
+  id: string,
+  status: OrderStatus,
+  adminNotes?: string,
+): Promise<void> {
+  const sb = supabaseAdmin();
+  const patch: Record<string, unknown> = { status };
+  if (adminNotes !== undefined) patch.admin_notes = adminNotes;
+  const { error } = await sb.from("orders").update(patch).eq("id", id);
+  if (error) throw error;
+}
+
+/** Order counts grouped by status (for dashboard). */
+export async function getOrderStats(): Promise<{
+  total: number;
+  pendingPayment: number;
+  paymentReview: number;
+  confirmed: number;
+  shipped: number;
+  delivered: number;
+  revenue: number;
+  profit: number;
+}> {
+  const sb = supabaseAdmin();
+  const { data, error } = await sb.from("orders").select("status,subtotal");
+  if (error) throw error;
+  const rows = data ?? [];
+
+  const count = (s: string) => rows.filter((r) => r.status === s).length;
+  const sum = (statuses: string[]) =>
+    rows
+      .filter((r) => statuses.includes(r.status))
+      .reduce((n, r) => n + Number(r.subtotal), 0);
+
+  // Revenue = confirmed + packed + shipped + delivered
+  const revenueStatuses = ["confirmed", "packed", "shipped", "delivered"];
+
+  // Profit requires product cost — we approximate from orders data only
+  // (full profit calc needs a join to products; this gives gross revenue for now)
+  return {
+    total: rows.length,
+    pendingPayment: count("pending_payment"),
+    paymentReview: count("payment_review"),
+    confirmed: count("confirmed"),
+    shipped: count("shipped"),
+    delivered: count("delivered"),
+    revenue: sum(revenueStatuses),
+    profit: 0, // populated separately when product costs are joined
+  };
+}

@@ -10,7 +10,7 @@ const links = [
   { href: "/account/profile", label: "My details", icon: User },
   { href: "/account/addresses", label: "Addresses", icon: MapPin },
   { href: "/account/orders", label: "Orders", icon: Package },
-  { href: "/account/wishlist", label: "Wishlist", icon: Heart, soon: true },
+  { href: "/account/wishlist", label: "Wishlist", icon: Heart },
 ];
 
 export function AccountNav() {

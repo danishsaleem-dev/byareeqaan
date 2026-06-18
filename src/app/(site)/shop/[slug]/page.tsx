@@ -13,6 +13,7 @@ import { absUrl, productLd, breadcrumbLd } from "@/lib/seo";
 import { ProductGallery } from "@/components/site/ProductGallery";
 import { ProductPurchase } from "@/components/site/ProductPurchase";
 import { ProductCard } from "@/components/site/ProductCard";
+import { WishlistButton } from "@/components/site/WishlistButton";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Reveal } from "@/components/Reveal";
 
@@ -119,7 +120,13 @@ export default async function ProductPage({
           name={product.name}
           grad={grad}
         />
-        <ProductPurchase product={product} />
+        <div className="relative">
+          <WishlistButton
+            productId={product.id}
+            className="absolute right-0 top-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-plum shadow-soft backdrop-blur-sm transition-colors hover:text-rose-500"
+          />
+          <ProductPurchase product={product} />
+        </div>
       </div>
 
       {/* full description */}

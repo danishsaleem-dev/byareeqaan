@@ -34,6 +34,7 @@ import {
   deleteFromStorage,
   createSignedUpload,
 } from "@/lib/storage";
+import { updateOrderStatus } from "@/lib/orders";
 import {
   type ProductInput,
   type ProductStatus,
@@ -43,6 +44,7 @@ import {
   type MediaFile,
   type HomepageConfig,
   type SiteConfig,
+  type OrderStatus,
 } from "@/lib/types";
 import { slugify } from "@/lib/slug";
 
@@ -282,6 +284,17 @@ export async function saveSiteGroupAction<K extends keyof SiteConfig>(
   } catch (e) {
     return { ok: false, error: (e as Error).message };
   }
+}
+
+export async function updateOrderStatusAction(
+  id: string,
+  status: OrderStatus,
+  adminNotes?: string,
+) {
+  await requireAuth();
+  await updateOrderStatus(id, status, adminNotes);
+  revalidatePath("/admin/orders");
+  revalidatePath(`/admin/orders/${id}`);
 }
 
 /** Used by the inline "create collection" control inside the product form. */

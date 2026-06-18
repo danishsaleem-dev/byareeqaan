@@ -22,5 +22,10 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/login?error=link`);
+  // Surface Supabase's own error (e.g. expired link) on the login screen.
+  const reason =
+    searchParams.get("error_description") || searchParams.get("error") || "link";
+  return NextResponse.redirect(
+    `${origin}/login?error=${encodeURIComponent(reason)}&next=${encodeURIComponent(next)}`,
+  );
 }

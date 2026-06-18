@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; error?: string }>;
 }) {
   const sp = await searchParams;
   const next = sp.next && sp.next.startsWith("/") ? sp.next : "/account";
@@ -36,7 +36,7 @@ export default async function LoginPage({
         </p>
       </div>
 
-      <CustomerLoginForm next={next} />
+      <CustomerLoginForm next={next} initialError={sp.error} />
     </main>
   );
 }

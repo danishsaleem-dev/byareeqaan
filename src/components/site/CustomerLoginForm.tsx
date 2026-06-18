@@ -2,17 +2,44 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Mail, ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
+import { Mail, ArrowRight, CheckCircle2, Sparkles, AlertCircle } from "lucide-react";
 import { createSupabaseBrowser } from "@/lib/supabase/client";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-export function CustomerLoginForm({ next }: { next: string }) {
+/** Turn Supabase's raw error text into something friendly. */
+function friendly(raw?: string): string | null {
+  if (!raw) return null;
+  if (/expired|invalid/i.test(raw)) {
+    return "That link expired or was already used. Pop your email in again and we'll send a fresh one.";
+  }
+  return raw;
+}
+
+export function CustomerLoginForm({
+  next,
+  initialError,
+}: {
+  next: string;
+  initialError?: string;
+}) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
   );
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(friendly(initialError));
+  const [resent, setResent] = useState(false);
+
+  async function sendLink(value: string) {
+    const supabase = createSupabaseBrowser();
+    const emailRedirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(
+      next,
+    )}`;
+    return supabase.auth.signInWithOtp({
+      email: value,
+      options: { emailRedirectTo, shouldCreateUser: true },
+    });
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -21,20 +48,22 @@ export function CustomerLoginForm({ next }: { next: string }) {
     setStatus("sending");
     setError(null);
 
-    const supabase = createSupabaseBrowser();
-    const emailRedirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(
-      next,
-    )}`;
-    const { error } = await supabase.auth.signInWithOtp({
-      email: value,
-      options: { emailRedirectTo, shouldCreateUser: true },
-    });
-
+    const { error } = await sendLink(value);
     if (error) {
       setError(error.message);
       setStatus("error");
     } else {
       setStatus("sent");
+    }
+  }
+
+  async function resend() {
+    if (!email.trim()) return;
+    setResent(false);
+    const { error } = await sendLink(email.trim());
+    if (!error) {
+      setResent(true);
+      setTimeout(() => setResent(false), 3000);
     }
   }
 
@@ -56,18 +85,40 @@ export function CustomerLoginForm({ next }: { next: string }) {
           We sent a sign-in link to <strong className="text-plum">{email}</strong>.
           Tap it on this device and you&apos;ll be signed straight in.
         </p>
-        <button
-          onClick={() => setStatus("idle")}
-          className="mt-5 text-sm font-medium text-violet-deep transition-colors hover:text-violet"
-        >
-          Use a different email
-        </button>
+        <p className="mt-3 text-xs leading-relaxed text-muted">
+          Links expire quickly — open it soon. Check spam if it&apos;s not there in
+          a minute.
+        </p>
+        <div className="mt-5 flex flex-col items-center gap-2">
+          <button
+            onClick={resend}
+            className="text-sm font-medium text-violet-deep transition-colors hover:text-violet"
+          >
+            {resent ? "Link sent again ✓" : "Didn't get it? Resend link"}
+          </button>
+          <button
+            onClick={() => {
+              setStatus("idle");
+              setResent(false);
+            }}
+            className="text-sm text-muted transition-colors hover:text-plum"
+          >
+            Use a different email
+          </button>
+        </div>
       </motion.div>
     );
   }
 
   return (
     <form onSubmit={submit} className="space-y-4">
+      {error && (
+        <div className="flex items-start gap-2 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          <AlertCircle size={16} className="mt-0.5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+
       <div>
         <label className="mb-1.5 block text-sm font-medium text-plum">
           Email address
@@ -88,8 +139,6 @@ export function CustomerLoginForm({ next }: { next: string }) {
           />
         </div>
       </div>
-
-      {error && <p className="text-sm text-rose-600">{error}</p>}
 
       <motion.button
         type="submit"

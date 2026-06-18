@@ -4,7 +4,6 @@ import { getWishlistIds } from "@/lib/wishlist";
 import { getProduct } from "@/lib/data";
 import { formatPrice } from "@/lib/format";
 import { WishlistButton } from "@/components/site/WishlistButton";
-import { SmartImage } from "@/components/site/SmartImage";
 import type { Product } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -62,14 +61,13 @@ function WishlistCard({ product }: { product: Product }) {
     <li className="group relative rounded-2xl border border-plum/10 bg-white p-4 transition-all hover:border-violet/30 hover:shadow-soft">
       <div className="flex gap-4">
         <Link href={`/shop/${product.slug}`} className="shrink-0">
-          <div className="relative h-20 w-20 overflow-hidden rounded-xl bg-violet/10">
+          <div className="h-20 w-20 overflow-hidden rounded-xl bg-violet/10">
             {image && (
-              <SmartImage
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
                 src={image}
                 alt={product.name}
-                fill
-                sizes="80px"
-                className="object-cover"
+                className="h-full w-full object-cover"
               />
             )}
           </div>

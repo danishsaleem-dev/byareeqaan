@@ -27,10 +27,13 @@ function toProduct(r: any): Product {
     fullDesc: r.full_desc ?? "",
     price: Number(r.price ?? 0),
     comparePrice: r.compare_price == null ? null : Number(r.compare_price),
+    cost: r.cost == null ? null : Number(r.cost),
+    stock: r.stock == null ? null : Number(r.stock),
     weight: r.weight == null ? null : Number(r.weight),
     slug: r.slug,
     status: r.status,
     featured: !!r.featured,
+    sold: !!r.sold,
     seoTitle: r.seo_title ?? "",
     seoDesc: r.seo_desc ?? "",
     images: r.images ?? [],
@@ -51,10 +54,13 @@ function fromProductInput(p: ProductInput) {
     full_desc: p.fullDesc,
     price: p.price,
     compare_price: p.comparePrice,
+    cost: p.cost,
+    stock: p.stock,
     weight: p.weight,
     slug: p.slug,
     status: p.status,
     featured: p.featured,
+    sold: p.sold,
     seo_title: p.seoTitle,
     seo_desc: p.seoDesc,
     images: p.images,
@@ -222,6 +228,15 @@ export async function setProductFeatured(
   const { error } = await sb
     .from("products")
     .update({ featured, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) throw error;
+}
+
+export async function setProductSold(id: string, sold: boolean): Promise<void> {
+  const sb = supabaseAdmin();
+  const { error } = await sb
+    .from("products")
+    .update({ sold, updated_at: new Date().toISOString() })
     .eq("id", id);
   if (error) throw error;
 }

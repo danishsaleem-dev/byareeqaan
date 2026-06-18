@@ -40,6 +40,25 @@ export function waLink(message?: string): string {
   return message ? `${WA}?text=${encodeURIComponent(message)}` : WA;
 }
 
+/** WhatsApp order link prefilled with a whole bag of items. */
+export function bagWaLink(
+  items: { name: string; variantTitle?: string; qty: number; price: number }[],
+  subtotal: number,
+): string {
+  const lines = ["Hi By Areeqaan! I'd like to order:", ""];
+  for (const it of items) {
+    const v = it.variantTitle ? ` (${it.variantTitle})` : "";
+    lines.push(`• ${it.name}${v} ×${it.qty} — ${formatPrice(it.price * it.qty)}`);
+  }
+  lines.push(
+    "",
+    `Subtotal: ${formatPrice(subtotal)}`,
+    "",
+    "Please confirm availability ✨",
+  );
+  return waLink(lines.join("\n"));
+}
+
 /** WhatsApp order link prefilled with product details. */
 export function productWaLink(opts: {
   name: string;

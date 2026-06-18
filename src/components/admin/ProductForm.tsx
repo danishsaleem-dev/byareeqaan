@@ -62,6 +62,13 @@ export function ProductForm({
   const [weight, setWeight] = useState(
     product?.weight != null ? String(product.weight) : "",
   );
+  const [cost, setCost] = useState(
+    product?.cost != null ? String(product.cost) : "",
+  );
+  const [stock, setStock] = useState(
+    product?.stock != null ? String(product.stock) : "",
+  );
+  const [sold, setSold] = useState(product?.sold ?? false);
   const [images, setImages] = useState<ProductImage[]>(product?.images ?? []);
   const [videos, setVideos] = useState<string[]>(product?.videos ?? []);
   const [variants, setVariants] = useState<Variant[]>(product?.variants ?? []);
@@ -162,10 +169,13 @@ export function ProductForm({
       fullDesc,
       price: Number(price) || 0,
       comparePrice: comparePrice === "" ? null : Number(comparePrice),
+      cost: cost === "" ? null : Number(cost),
+      stock: stock === "" ? null : Number(stock),
       weight: weight === "" ? null : Number(weight),
       slug: slug || slugify(name),
       status,
       featured,
+      sold,
       seoTitle,
       seoDesc,
       images,
@@ -268,6 +278,20 @@ export function ProductForm({
               </Field>
               <Field label="Weight (g)">
                 <Input type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="optional" />
+              </Field>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field
+                label="Cost price (Rs)"
+                hint={<span className="text-muted">private · for profit</span>}
+              >
+                <Input type="number" value={cost} onChange={(e) => setCost(e.target.value)} placeholder="what it cost you" />
+              </Field>
+              <Field
+                label="Stock"
+                hint={<span className="text-muted">blank = made to order</span>}
+              >
+                <Input type="number" value={stock} onChange={(e) => setStock(e.target.value)} placeholder="e.g. 5" />
               </Field>
             </div>
           </Card>
@@ -420,6 +444,15 @@ export function ProductForm({
             <div className="flex items-center justify-between">
               <span className="text-[13px] font-medium text-plum">Featured</span>
               <Toggle checked={featured} onChange={setFeatured} />
+            </div>
+            <div className="flex items-center justify-between border-t border-black/[0.06] pt-4">
+              <div>
+                <span className="text-[13px] font-medium text-plum">Sold</span>
+                <p className="text-xs text-muted">
+                  Shows &ldquo;Request to order&rdquo; on the site
+                </p>
+              </div>
+              <Toggle checked={sold} onChange={setSold} />
             </div>
           </Card>
 

@@ -14,6 +14,7 @@ import {
   deleteProduct,
   setProductStatus,
   setProductFeatured,
+  setProductSold,
   uniqueProductSlug,
   createCollection,
   updateCollection,
@@ -91,10 +92,13 @@ export async function saveProductAction(
       price: Number(payload.price) || 0,
       comparePrice:
         payload.comparePrice == null ? null : Number(payload.comparePrice),
+      cost: payload.cost == null ? null : Number(payload.cost),
+      stock: payload.stock == null ? null : Number(payload.stock),
       weight: payload.weight == null ? null : Number(payload.weight),
       slug,
       status: payload.status,
       featured: !!payload.featured,
+      sold: !!payload.sold,
       seoTitle: payload.seoTitle ?? "",
       seoDesc: payload.seoDesc ?? "",
       images: payload.images ?? [],
@@ -127,6 +131,12 @@ export async function setProductStatusAction(id: string, status: ProductStatus) 
 export async function toggleFeaturedAction(id: string, featured: boolean) {
   await requireAuth();
   await setProductFeatured(id, featured);
+  revalidateAdmin();
+}
+
+export async function toggleSoldAction(id: string, sold: boolean) {
+  await requireAuth();
+  await setProductSold(id, sold);
   revalidateAdmin();
 }
 

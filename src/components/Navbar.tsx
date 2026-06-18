@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
 import { Logo } from "./Logo";
+import { useBag } from "@/lib/bag";
 import { site } from "@/lib/site";
 
 const links = [
@@ -23,6 +24,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
+  const { count, open: openBag } = useBag();
 
   useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 40));
 
@@ -67,6 +69,18 @@ export function Navbar() {
           >
             Order on WhatsApp
           </a>
+          <button
+            onClick={openBag}
+            aria-label={`Open bag${count ? ` (${count} items)` : ""}`}
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-cream text-plum transition-colors hover:text-violet-deep"
+          >
+            <ShoppingBag size={18} />
+            {count > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-violet-deep px-1 text-[10px] font-semibold text-ivory">
+                {count > 99 ? "99+" : count}
+              </span>
+            )}
+          </button>
           <button
             onClick={() => setOpen((v) => !v)}
             aria-label="Toggle menu"

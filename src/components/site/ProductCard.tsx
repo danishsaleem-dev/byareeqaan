@@ -31,7 +31,12 @@ export function ProductCard({
 
         {/* badges */}
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
-          {off && (
+          {product.sold && (
+            <span className="rounded-full bg-rose-500/90 px-2.5 py-1 text-[11px] font-medium text-white shadow">
+              Sold
+            </span>
+          )}
+          {!product.sold && off && (
             <span className="rounded-full bg-violet-deep px-2.5 py-1 text-[11px] font-medium text-ivory shadow">
               −{off}%
             </span>
@@ -66,6 +71,11 @@ export function ProductCard({
           {product.comparePrice && product.comparePrice > product.price && (
             <span className="text-xs text-muted line-through">
               {formatPrice(product.comparePrice)}
+            </span>
+          )}
+          {product.sold && (
+            <span className="ml-auto text-[11px] font-medium text-rose-500">
+              Request to order
             </span>
           )}
         </div>

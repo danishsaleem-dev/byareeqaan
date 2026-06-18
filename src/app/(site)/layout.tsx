@@ -1,6 +1,8 @@
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { BagProvider } from "@/lib/bag";
+import { BagDrawer } from "@/components/site/BagDrawer";
 
 export default function SiteLayout({
   children,
@@ -9,11 +11,14 @@ export default function SiteLayout({
 }) {
   return (
     <div className="grain">
-      <SmoothScroll>
-        <Navbar />
-        {children}
-        <Footer />
-      </SmoothScroll>
+      <BagProvider>
+        <SmoothScroll>
+          <Navbar />
+          {children}
+          <Footer />
+        </SmoothScroll>
+        <BagDrawer />
+      </BagProvider>
     </div>
   );
 }

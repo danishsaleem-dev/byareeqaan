@@ -3,12 +3,13 @@
 import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { clsx } from "clsx";
-import { Search, Plus, Trash2, Package, Star } from "lucide-react";
+import { Search, Plus, Trash2, Package, Star, Tag } from "lucide-react";
 import { Input, StatusBadge } from "./ui";
 import {
   setProductStatusAction,
   deleteProductAction,
   toggleFeaturedAction,
+  toggleSoldAction,
 } from "@/app/admin/actions";
 import type { Product, ProductStatus } from "@/lib/types";
 
@@ -47,6 +48,11 @@ export function ProductsTable({ initial }: { initial: Product[] }) {
   function toggleFeatured(id: string, featured: boolean) {
     setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, featured } : p)));
     start(() => toggleFeaturedAction(id, featured));
+  }
+
+  function toggleSold(id: string, sold: boolean) {
+    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, sold } : p)));
+    start(() => toggleSoldAction(id, sold));
   }
 
   function remove(p: Product) {
@@ -124,6 +130,19 @@ export function ProductsTable({ initial }: { initial: Product[] }) {
                 </div>
 
                 <div className="flex items-center justify-between gap-2 sm:justify-end">
+                  <button
+                    onClick={() => toggleSold(p.id, !p.sold)}
+                    title={p.sold ? "Marked sold — tap to mark available" : "Mark as sold"}
+                    className={clsx(
+                      "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
+                      p.sold
+                        ? "border-rose-200 bg-rose-50 text-rose-600"
+                        : "border-black/10 text-muted hover:border-violet/40 hover:text-violet-deep",
+                    )}
+                  >
+                    <Tag size={13} /> {p.sold ? "Sold" : "Mark sold"}
+                  </button>
+
                   <button
                     onClick={() => toggleFeatured(p.id, !p.featured)}
                     title={p.featured ? "Featured" : "Mark featured"}

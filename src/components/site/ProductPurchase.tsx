@@ -2,29 +2,52 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Check, Package, RefreshCw, Truck } from "lucide-react";
+import { Check, Minus, Plus, Package, RefreshCw, ShoppingBag, Truck } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { formatPrice, discountPercent, productWaLink } from "@/lib/format";
+import { useBag } from "@/lib/bag";
 import { WhatsAppIcon, InstagramIcon } from "@/components/BrandIcons";
 import { site } from "@/lib/site";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 export function ProductPurchase({ product }: { product: Product }) {
+  const { add } = useBag();
   const variants = product.variants.filter((v) => v.available !== false);
   const [variantId, setVariantId] = useState<string | null>(
     variants.length ? variants[0].id : null,
   );
   const variant = variants.find((v) => v.id === variantId) ?? null;
+  const [qty, setQty] = useState(1);
 
   const price = variant?.price && variant.price > 0 ? variant.price : product.price;
   const off = discountPercent(price, product.comparePrice);
+  const sold = product.sold;
+  const stock = product.stock;
+  const overStock = stock != null && qty > stock;
 
   const wa = productWaLink({
     name: product.name,
     variant: variant?.title,
     price,
   });
+
+  function addToBag() {
+    const primary = product.images.find((i) => i.primary) ?? product.images[0];
+    add(
+      {
+        productId: product.id,
+        slug: product.slug,
+        name: product.name,
+        image: primary?.url,
+        price,
+        variantId: variant?.id,
+        variantTitle: variant?.title,
+        stock,
+      },
+      qty,
+    );
+  }
 
   return (
     <div className="lg:py-2">
@@ -60,7 +83,24 @@ export function ProductPurchase({ product }: { product: Product }) {
         </p>
       )}
 
-      {variants.length > 0 && (
+      {/* stock hint */}
+      {!sold && stock != null && (
+        <p className="mt-4 text-sm text-muted">
+          {stock > 0 ? (
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              {stock <= 5 ? `Only ${stock} left in stock` : "In stock"}
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-amber-500" />
+              Made to order
+            </span>
+          )}
+        </p>
+      )}
+
+      {!sold && variants.length > 0 && (
         <div className="mt-7">
           <p className="mb-2.5 text-sm font-medium text-plum">Options</p>
           <div className="flex flex-wrap gap-2">
@@ -81,23 +121,83 @@ export function ProductPurchase({ product }: { product: Product }) {
         </div>
       )}
 
-      <motion.a
-        href={wa}
-        target="_blank"
-        rel="noopener noreferrer"
-        whileHover={{ scale: 1.01 }}
-        whileTap={{ scale: 0.99 }}
-        transition={{ duration: 0.2, ease }}
-        className="mt-8 flex w-full items-center justify-center gap-2.5 rounded-full bg-violet-deep px-8 py-4 text-base font-medium text-ivory shadow-soft transition-colors hover:bg-violet"
-      >
-        <WhatsAppIcon size={20} /> Order on WhatsApp
-      </motion.a>
+      {sold ? (
+        /* ── Sold: request to order ───────────────────────────── */
+        <div className="mt-8">
+          <div className="mb-4 rounded-2xl border border-rose-200 bg-rose-50/60 px-4 py-3 text-sm text-rose-700">
+            This piece is currently <strong>sold out</strong>. Request it and
+            we&apos;ll let you know if we can recreate or restock it for you.
+          </div>
+          <motion.a
+            href={wa}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            transition={{ duration: 0.2, ease }}
+            className="flex w-full items-center justify-center gap-2.5 rounded-full bg-violet-deep px-8 py-4 text-base font-medium text-ivory shadow-soft transition-colors hover:bg-violet"
+          >
+            <WhatsAppIcon size={20} /> Request to order
+          </motion.a>
+        </div>
+      ) : (
+        /* ── Available: quantity + add to bag ─────────────────── */
+        <div className="mt-8">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center rounded-full border border-plum/15">
+              <button
+                onClick={() => setQty((q) => Math.max(1, q - 1))}
+                aria-label="Decrease quantity"
+                className="flex h-11 w-11 items-center justify-center text-plum transition-colors hover:text-violet-deep"
+              >
+                <Minus size={16} />
+              </button>
+              <span className="w-8 text-center text-base font-medium text-ink">
+                {qty}
+              </span>
+              <button
+                onClick={() => setQty((q) => q + 1)}
+                aria-label="Increase quantity"
+                className="flex h-11 w-11 items-center justify-center text-plum transition-colors hover:text-violet-deep"
+              >
+                <Plus size={16} />
+              </button>
+            </div>
+
+            <motion.button
+              onClick={addToBag}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              transition={{ duration: 0.2, ease }}
+              className="flex flex-1 items-center justify-center gap-2.5 rounded-full bg-violet-deep px-8 py-4 text-base font-medium text-ivory shadow-soft transition-colors hover:bg-violet"
+            >
+              <ShoppingBag size={19} /> Add to bag
+            </motion.button>
+          </div>
+
+          {overStock && (
+            <p className="mt-3 rounded-xl bg-amber-50 px-3.5 py-2.5 text-xs leading-relaxed text-amber-700">
+              Only {stock} in stock right now. You can still order {qty} — we&apos;ll
+              confirm if we can get the rest to you in time.
+            </p>
+          )}
+
+          <a
+            href={wa}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-plum/15 px-8 py-3.5 text-sm font-medium text-plum transition-colors hover:border-violet hover:text-violet-deep"
+          >
+            <WhatsAppIcon size={18} /> Ask about this piece
+          </a>
+        </div>
+      )}
 
       <a
         href={site.socials.instagram.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-plum/15 px-8 py-3.5 text-sm font-medium text-plum transition-colors hover:border-violet hover:text-violet-deep"
+        className="mt-3 flex w-full items-center justify-center gap-2 rounded-full px-8 py-2.5 text-sm font-medium text-plum transition-colors hover:text-violet-deep"
       >
         <InstagramIcon size={18} /> See more on Instagram
       </a>

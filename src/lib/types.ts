@@ -25,10 +25,13 @@ export interface Product {
   fullDesc: string;
   price: number;
   comparePrice: number | null;
+  cost: number | null;
+  stock: number | null;
   weight: number | null;
   slug: string;
   status: ProductStatus;
   featured: boolean;
+  sold: boolean;
   seoTitle: string;
   seoDesc: string;
   images: ProductImage[];

@@ -19,6 +19,7 @@ export function ProductPurchase({ product }: { product: Product }) {
   );
   const variant = variants.find((v) => v.id === variantId) ?? null;
   const [qty, setQty] = useState(1);
+  const [notes, setNotes] = useState("");
 
   const price = variant?.price && variant.price > 0 ? variant.price : product.price;
   const off = discountPercent(price, product.comparePrice);
@@ -44,9 +45,11 @@ export function ProductPurchase({ product }: { product: Product }) {
         variantId: variant?.id,
         variantTitle: variant?.title,
         stock,
+        notes: notes.trim() || undefined,
       },
       qty,
     );
+    setNotes("");
   }
 
   return (
@@ -143,6 +146,20 @@ export function ProductPurchase({ product }: { product: Product }) {
       ) : (
         /* ── Available: quantity + add to bag ─────────────────── */
         <div className="mt-8">
+          {/* Notes / personalisation */}
+          <div className="mb-5">
+            <label className="mb-2 block text-sm font-medium text-plum">
+              Any special details? <span className="font-normal text-muted">(optional)</span>
+            </label>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              rows={2}
+              maxLength={300}
+              placeholder="e.g. preferred colour, chain length, personalisation, gift message…"
+              className="w-full resize-none rounded-2xl border border-plum/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-muted/60 outline-none focus:border-violet/50 focus:ring-2 focus:ring-violet/10"
+            />
+          </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center rounded-full border border-plum/15">
               <button

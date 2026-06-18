@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { formatPrice, discountPercent, gradFor } from "@/lib/format";
 import { SmartImage } from "./SmartImage";
+import { WishlistButton } from "./WishlistButton";
 
 export function ProductCard({
   product,
@@ -47,6 +48,13 @@ export function ProductCard({
             </span>
           )}
         </div>
+
+        {/* wishlist */}
+        <WishlistButton
+          productId={product.id}
+          size={16}
+          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-ivory/85 text-plum shadow-sm backdrop-blur transition-all hover:bg-ivory hover:text-rose-500 z-10"
+        />
 
         {/* view cue */}
         <span className="absolute bottom-3 right-3 flex h-9 w-9 translate-y-2 items-center justify-center rounded-full bg-ivory/90 text-violet-deep opacity-0 backdrop-blur transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">

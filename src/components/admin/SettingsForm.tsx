@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useTransition, type ReactNode } from "react";
-import { Check, X } from "lucide-react";
+import { Check, FolderOpen, X } from "lucide-react";
 import { Card, Field, Input, Textarea, Button } from "./ui";
 import { Uploader } from "./Uploader";
+import { MediaPicker } from "./MediaPicker";
 import { saveSiteGroupAction } from "@/app/admin/actions";
-import type { SiteConfig } from "@/lib/types";
+import type { MediaFile, SiteConfig } from "@/lib/types";
 
 export function SettingsForm({ initial }: { initial: SiteConfig }) {
   return (
@@ -83,9 +84,40 @@ function ImagePick({
             </button>
           </div>
         )}
-        <Uploader onUploaded={(f) => f[0] && onChange(f[0].url)} accept="image/*" multiple={false} compact label="Upload" />
+        <div className="flex flex-wrap gap-2">
+          <Uploader onUploaded={(f) => f[0] && onChange(f[0].url)} accept="image/*" multiple={false} compact label="Upload" />
+          <LibraryPickerBtn onSelect={onChange} />
+        </div>
       </div>
     </Field>
+  );
+}
+
+function LibraryPickerBtn({ onSelect }: { onSelect: (url: string) => void }) {
+  const [open, setOpen] = useState(false);
+  function handleSelect(files: MediaFile[]) {
+    const img = files.find((f) => f.type === "image");
+    if (img) onSelect(img.url);
+    setOpen(false);
+  }
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="inline-flex items-center gap-1.5 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-xs font-medium text-plum hover:bg-black/[0.03]"
+      >
+        <FolderOpen size={13} /> Library
+      </button>
+      {open && (
+        <MediaPicker
+          accept="image"
+          multiple={false}
+          onClose={() => setOpen(false)}
+          onSelect={handleSelect}
+        />
+      )}
+    </>
   );
 }
 

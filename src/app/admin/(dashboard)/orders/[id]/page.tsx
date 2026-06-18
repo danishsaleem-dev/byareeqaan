@@ -91,6 +91,11 @@ export default async function AdminOrderDetailPage({
                       <p className="text-xs text-muted">{it.variantTitle}</p>
                     )}
                     <p className="text-xs text-muted">Qty {it.qty}</p>
+                    {it.notes && (
+                      <p className="mt-1 rounded-lg bg-amber-50 px-2 py-1 text-xs text-amber-700">
+                        📝 {it.notes}
+                      </p>
+                    )}
                   </div>
                   <Link
                     href={`/shop/${it.slug}`}

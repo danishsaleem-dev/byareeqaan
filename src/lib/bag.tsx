@@ -21,6 +21,8 @@ export type BagItem = {
   /** available stock at add time; null = made to order / untracked */
   stock: number | null;
   qty: number;
+  /** customer's personalisation / special request note */
+  notes?: string;
 };
 
 type BagContextValue = {

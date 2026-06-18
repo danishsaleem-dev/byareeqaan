@@ -1,11 +1,45 @@
 "use client";
 
 import { useState, useTransition, type ReactNode } from "react";
-import { Check, Plus, X } from "lucide-react";
+import { Check, FolderOpen, Plus, X } from "lucide-react";
 import { Card, Field, Input, Textarea, Button, Toggle } from "./ui";
 import { Uploader } from "./Uploader";
+import { MediaPicker } from "./MediaPicker";
 import { saveHomepageSectionAction } from "@/app/admin/actions";
-import type { HomepageConfig } from "@/lib/types";
+import type { HomepageConfig, MediaFile } from "@/lib/types";
+
+function PickerButton({
+  multiple = true,
+  onSelect,
+}: {
+  multiple?: boolean;
+  onSelect: (urls: string[]) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  function handleSelect(files: MediaFile[]) {
+    onSelect(files.filter((f) => f.type === "image").map((f) => f.url));
+    setOpen(false);
+  }
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="inline-flex items-center gap-1.5 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-xs font-medium text-plum hover:bg-black/[0.03]"
+      >
+        <FolderOpen size={13} /> Choose from library
+      </button>
+      {open && (
+        <MediaPicker
+          accept="image"
+          multiple={multiple}
+          onClose={() => setOpen(false)}
+          onSelect={handleSelect}
+        />
+      )}
+    </>
+  );
+}
 
 export function HomepageEditor({ initial }: { initial: HomepageConfig }) {
   return (
@@ -52,12 +86,18 @@ export function HomepageEditor({ initial }: { initial: HomepageConfig }) {
                     ))}
                   </div>
                 )}
-                <Uploader
-                  onUploaded={(files) => set({ ...value, images: [...value.images, ...files.filter((f) => f.type === "image").map((f) => f.url)] })}
-                  accept="image/*"
-                  compact
-                  label="Add hero images"
-                />
+                <div className="flex flex-wrap gap-2">
+                  <Uploader
+                    onUploaded={(files) => set({ ...value, images: [...value.images, ...files.filter((f) => f.type === "image").map((f) => f.url)] })}
+                    accept="image/*"
+                    compact
+                    label="Upload images"
+                  />
+                  <PickerButton
+                    multiple
+                    onSelect={(urls) => set({ ...value, images: [...value.images, ...urls] })}
+                  />
+                </div>
               </div>
             </Field>
             <Field label="Headline"><Input value={value.headline} onChange={(e) => set({ ...value, headline: e.target.value })} /></Field>
@@ -108,7 +148,10 @@ export function HomepageEditor({ initial }: { initial: HomepageConfig }) {
                     </button>
                   </div>
                 )}
-                <Uploader onUploaded={(f) => f[0] && set({ ...value, image: f[0].url })} accept="image/*" multiple={false} compact label="Upload image" />
+                <div className="flex flex-wrap gap-2">
+                  <Uploader onUploaded={(f) => f[0] && set({ ...value, image: f[0].url })} accept="image/*" multiple={false} compact label="Upload image" />
+                  <PickerButton multiple={false} onSelect={(urls) => urls[0] && set({ ...value, image: urls[0] })} />
+                </div>
               </div>
             </Field>
             <Field label="Title"><Input value={value.title} onChange={(e) => set({ ...value, title: e.target.value })} /></Field>

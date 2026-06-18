@@ -114,6 +114,7 @@ export interface OrderItem {
   variantId?: string;
   variantTitle?: string;
   qty: number;
+  notes?: string;
 }
 
 export interface Order {

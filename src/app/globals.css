@@ -18,7 +18,7 @@
   --color-muted: #7c6f80;
 
   --font-display: var(--font-cormorant);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-nunito);
 
   --shadow-soft: 0 24px 60px -28px rgba(76, 29, 149, 0.35);
   --shadow-card: 0 30px 70px -40px rgba(36, 22, 39, 0.55);

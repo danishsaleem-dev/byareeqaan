@@ -34,7 +34,14 @@ import {
   deleteFromStorage,
   createSignedUpload,
 } from "@/lib/storage";
-import { updateOrderStatus } from "@/lib/orders";
+import { updateOrderStatus, deleteOrder } from "@/lib/orders";
+import {
+  createTestimonial,
+  updateTestimonial,
+  deleteTestimonial,
+  setTestimonialActive,
+  type TestimonialInput,
+} from "@/lib/testimonials";
 import {
   type ProductInput,
   type ProductStatus,
@@ -286,6 +293,12 @@ export async function saveSiteGroupAction<K extends keyof SiteConfig>(
   }
 }
 
+export async function deleteOrderAction(id: string) {
+  await requireAuth();
+  await deleteOrder(id);
+  revalidatePath("/admin/orders");
+}
+
 export async function updateOrderStatusAction(
   id: string,
   status: OrderStatus,
@@ -295,6 +308,39 @@ export async function updateOrderStatusAction(
   await updateOrderStatus(id, status, adminNotes);
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${id}`);
+}
+
+// ── testimonials ──────────────────────────────────────────────
+export async function saveTestimonialAction(
+  input: TestimonialInput & { id?: string },
+): Promise<{ ok: boolean; error?: string }> {
+  await requireAuth();
+  try {
+    if (input.id) {
+      await updateTestimonial(input.id, input);
+    } else {
+      await createTestimonial(input);
+    }
+    revalidatePath("/admin/testimonials");
+    revalidatePath("/", "layout");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+}
+
+export async function deleteTestimonialAction(id: string) {
+  await requireAuth();
+  await deleteTestimonial(id);
+  revalidatePath("/admin/testimonials");
+  revalidatePath("/", "layout");
+}
+
+export async function toggleTestimonialActiveAction(id: string, active: boolean) {
+  await requireAuth();
+  await setTestimonialActive(id, active);
+  revalidatePath("/admin/testimonials");
+  revalidatePath("/", "layout");
 }
 
 /** Used by the inline "create collection" control inside the product form. */

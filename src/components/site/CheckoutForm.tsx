@@ -184,6 +184,7 @@ export function CheckoutForm({
         variantId: i.variantId,
         variantTitle: i.variantTitle,
         qty: i.qty,
+        notes: i.notes,
       }));
 
       const { id } = await placeOrderAction({

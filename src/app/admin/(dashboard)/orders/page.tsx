@@ -1,24 +1,12 @@
 import Link from "next/link";
 import { listAllOrders } from "@/lib/orders";
-import { formatPrice } from "@/lib/format";
 import { Card } from "@/components/admin/ui";
-import { ArrowRight, ShoppingCart } from "lucide-react";
-import type { Order, OrderStatus } from "@/lib/types";
+import { ShoppingCart } from "lucide-react";
+import { AdminOrdersList } from "@/components/admin/AdminOrdersList";
+import type { OrderStatus } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-const STATUS_META: Record<
-  OrderStatus,
-  { label: string; bg: string; text: string }
-> = {
-  pending_payment: { label: "Pending payment", bg: "bg-amber-100", text: "text-amber-700" },
-  payment_review:  { label: "Payment review",  bg: "bg-blue-100",  text: "text-blue-700" },
-  confirmed:       { label: "Confirmed",        bg: "bg-violet/10", text: "text-violet-deep" },
-  packed:          { label: "Packed",           bg: "bg-violet/10", text: "text-violet-deep" },
-  shipped:         { label: "Shipped",          bg: "bg-teal-100",  text: "text-teal-700" },
-  delivered:       { label: "Delivered",        bg: "bg-emerald-100", text: "text-emerald-700" },
-  cancelled:       { label: "Cancelled",        bg: "bg-rose-100",  text: "text-rose-600" },
-};
 
 const FILTER_TABS: { label: string; status?: OrderStatus }[] = [
   { label: "All" },
@@ -82,57 +70,10 @@ export default async function AdminOrdersPage({
             </p>
           </div>
         ) : (
-          <ul className="divide-y divide-black/[0.06]">
-            {orders.map((order) => (
-              <OrderRow key={order.id} order={order} />
-            ))}
-          </ul>
+          <AdminOrdersList initial={orders} />
         )}
       </Card>
     </div>
   );
 }
 
-function OrderRow({ order }: { order: Order }) {
-  const s = STATUS_META[order.status];
-  const itemCount = order.items.reduce((n, i) => n + i.qty, 0);
-  return (
-    <li>
-      <Link
-        href={`/admin/orders/${order.id}`}
-        className="group flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3.5 transition-colors hover:bg-black/[0.02] sm:flex-nowrap"
-      >
-        <div className="min-w-0 flex-1">
-          <p className="font-semibold text-ink">{order.orderNumber}</p>
-          <p className="text-xs text-muted">
-            {order.fullName} · {order.email}
-          </p>
-        </div>
-        <div className="text-right">
-          <p className="text-sm font-semibold text-ink">
-            {formatPrice(order.subtotal)}
-          </p>
-          <p className="text-xs text-muted">
-            {itemCount} item{itemCount !== 1 ? "s" : ""}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <span
-            className={`rounded-full px-2.5 py-1 text-[11px] font-medium ${s.bg} ${s.text}`}
-          >
-            {s.label}
-          </span>
-          {order.paymentScreenshotUrl && (
-            <span className="rounded-full bg-emerald-100 px-2 py-1 text-[11px] font-medium text-emerald-700">
-              Screenshot
-            </span>
-          )}
-          <ArrowRight
-            size={15}
-            className="text-muted transition-transform group-hover:translate-x-0.5"
-          />
-        </div>
-      </Link>
-    </li>
-  );
-}

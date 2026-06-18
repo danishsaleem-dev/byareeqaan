@@ -120,6 +120,11 @@ export function BagDrawer() {
                                       {it.variantTitle}
                                     </p>
                                   )}
+                                  {it.notes && (
+                                    <p className="mt-0.5 text-xs text-muted/80 italic">
+                                      &ldquo;{it.notes}&rdquo;
+                                    </p>
+                                  )}
                                 </Link>
                                 <button
                                   onClick={() => remove(k)}

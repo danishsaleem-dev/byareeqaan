@@ -101,6 +101,36 @@ export async function listAllOrders(status?: OrderStatus): Promise<Order[]> {
   return (data ?? []).map(toOrder);
 }
 
+/** Delete an order and restore stock for each item if it was a confirmed order (admin). */
+export async function deleteOrder(id: string): Promise<void> {
+  const sb = supabaseAdmin();
+  const { data: order } = await sb
+    .from("orders")
+    .select("items,status")
+    .eq("id", id)
+    .maybeSingle();
+
+  const ACTIVE = ["confirmed", "packed", "shipped", "delivered"];
+  if (order && ACTIVE.includes(order.status) && Array.isArray(order.items)) {
+    for (const it of order.items as OrderItem[]) {
+      const { data: p } = await sb
+        .from("products")
+        .select("stock")
+        .eq("id", it.productId)
+        .maybeSingle();
+      if (p?.stock != null) {
+        await sb
+          .from("products")
+          .update({ stock: p.stock + it.qty })
+          .eq("id", it.productId);
+      }
+    }
+  }
+
+  const { error } = await sb.from("orders").delete().eq("id", id);
+  if (error) throw error;
+}
+
 /** Update order status + optional admin note (admin). */
 export async function updateOrderStatus(
   id: string,

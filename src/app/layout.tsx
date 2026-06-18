@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Cormorant_Garamond, Nunito } from "next/font/google";
 import { site } from "@/lib/site";
 import { SITE_URL, organizationLd, websiteLd } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -12,9 +12,9 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
-const inter = Inter({
+const nunito = Nunito({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-nunito",
   display: "swap",
 });
 
@@ -89,7 +89,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${nunito.variable}`}>
       <head>
         {/* Warm up connections to image hosts for faster LCP. */}
         <link rel="preconnect" href="https://hmdszipyyayelegnimqh.supabase.co" />

@@ -1,4 +1,5 @@
 import { getHomepage, listPublishedProducts, listCollections } from "@/lib/data";
+import { listTestimonials } from "@/lib/testimonials";
 import { HeroImage } from "@/components/HeroImage";
 import { Marquee } from "@/components/Marquee";
 import { Collections } from "@/components/Collections";
@@ -13,10 +14,11 @@ import { AnnouncementStrip } from "@/components/site/AnnouncementStrip";
 export const revalidate = 300;
 
 export default async function Home() {
-  const [homepage, products, collections] = await Promise.all([
+  const [homepage, products, collections, testimonials] = await Promise.all([
     getHomepage(),
     listPublishedProducts(),
     listCollections(),
+    listTestimonials(true),
   ]);
 
   // Hero gallery: admin-uploaded hero images → else real product photos → else
@@ -53,7 +55,7 @@ export default async function Home() {
       <Story data={homepage.story} />
       <PromiseSection />
       <Guarantee />
-      <Testimonials />
+      <Testimonials items={testimonials} />
       <Contact data={homepage.contact} />
     </main>
   );

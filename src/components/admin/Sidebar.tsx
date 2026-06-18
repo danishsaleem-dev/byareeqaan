@@ -12,12 +12,14 @@ import {
   Settings,
   ShoppingCart,
   BarChart3,
+  Star,
 } from "lucide-react";
 
 const nav = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
   { href: "/admin/stats", label: "Statistics", icon: BarChart3 },
+  { href: "/admin/testimonials", label: "Reviews", icon: Star },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/collections", label: "Collections", icon: FolderOpen },
   { href: "/admin/media", label: "Media library", icon: ImageIcon },

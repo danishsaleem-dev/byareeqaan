@@ -109,23 +109,3 @@ export const guarantee = {
     "Our goal is to make your shopping experience safe, easy and worry-free.",
 } as const;
 
-export const testimonials = [
-  {
-    quote:
-      "The daintiest pieces I own — I haven't taken my necklace off since it arrived. Obsessed.",
-    name: "Hira K.",
-    city: "Lahore",
-  },
-  {
-    quote:
-      "Ordered from Dubai and it came beautifully packed. Looks far more luxe than the price.",
-    name: "Ayesha R.",
-    city: "Dubai",
-  },
-  {
-    quote:
-      "Finally minimal jewellery that actually looks modern. The ring stack is everything.",
-    name: "Zoya M.",
-    city: "Karachi",
-  },
-];

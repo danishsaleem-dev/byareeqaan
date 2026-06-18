@@ -125,6 +125,13 @@ export function ProductsTable({ initial }: { initial: Product[] }) {
                     <span className="text-sm text-muted">
                       Rs {p.price.toLocaleString()}
                       {p.sku && <span className="ml-2 text-muted/70">· {p.sku}</span>}
+                      {p.cost != null && p.cost > 0 && (() => {
+                        const profit = p.price - p.cost;
+                        const margin = Math.round((profit / p.price) * 100);
+                        return profit >= 0
+                          ? <span className="ml-2 font-medium text-emerald-600">+Rs {profit.toLocaleString()} ({margin}%)</span>
+                          : <span className="ml-2 font-medium text-rose-500">−Rs {Math.abs(profit).toLocaleString()}</span>;
+                      })()}
                     </span>
                   </Link>
                 </div>

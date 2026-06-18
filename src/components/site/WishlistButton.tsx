@@ -6,6 +6,7 @@ import {
   toggleWishlistAction,
   checkWishlistAction,
 } from "@/app/(site)/account/wishlist/actions";
+import { useToast } from "@/components/site/Toast";
 
 export function WishlistButton({
   productId,
@@ -21,6 +22,7 @@ export function WishlistButton({
   const [wishlisted, setWishlisted] = useState(initialWishlisted);
   const [checked, setChecked] = useState(initialWishlisted);
   const [pending, startTransition] = useTransition();
+  const { toast } = useToast();
 
   // Load real state from server on mount (product pages are ISR, can't read per-user server-side)
   useEffect(() => {
@@ -38,6 +40,7 @@ export function WishlistButton({
       setWishlisted(next);
       try {
         await toggleWishlistAction(productId, wishlisted);
+        if (next) toast("Saved to your wishlist ♡");
       } catch {
         setWishlisted(!next); // revert
       }

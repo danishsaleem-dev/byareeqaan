@@ -54,10 +54,9 @@ export function Story({ data }: { data?: StoryData }) {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_55%)]" />
                 <Leaf className="absolute -left-4 top-6 h-2/3 w-auto text-white/20" />
                 <Leaf flip className="absolute -right-4 bottom-6 h-2/3 w-auto text-white/20" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="font-display text-[34vw] font-semibold leading-none text-ivory/90 sm:text-[14rem]">
-                    BA
-                  </span>
+                <div className="absolute inset-0 flex items-center justify-center p-10">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/logo.png" alt="By Areeqaan" className="h-auto w-full max-w-[70%] object-contain drop-shadow-[0_2px_20px_rgba(255,255,255,0.4)]" />
                 </div>
               </>
             )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { X, ChevronLeft, ChevronRight, ZoomIn, Play } from "lucide-react";
 import type { ProductImage } from "@/lib/types";
@@ -48,7 +49,7 @@ function Lightbox({
     };
   }, [handleKey]);
 
-  return (
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -151,7 +152,8 @@ function Lightbox({
           ))}
         </div>
       )}
-    </motion.div>
+    </motion.div>,
+    document.body,
   );
 }
 

@@ -87,6 +87,7 @@ function toMedia(r: any): MediaFile {
   return {
     id: r.id,
     filename: r.filename,
+    altText: r.alt_text ?? "",
     url: r.url,
     path: r.path ?? "",
     type: r.type,
@@ -362,6 +363,7 @@ export async function createMedia(
     .from("media")
     .insert({
       filename: m.filename,
+      alt_text: m.altText ?? "",
       url: m.url,
       path: m.path,
       type: m.type,
@@ -382,6 +384,24 @@ export async function getMedia(id: string): Promise<MediaFile | null> {
     .maybeSingle();
   if (error) throw error;
   return data ? toMedia(data) : null;
+}
+
+export async function updateMedia(
+  id: string,
+  patch: { filename?: string; altText?: string },
+): Promise<MediaFile> {
+  const sb = supabaseAdmin();
+  const update: Record<string, string> = {};
+  if (patch.filename !== undefined) update.filename = patch.filename;
+  if (patch.altText !== undefined) update.alt_text = patch.altText;
+  const { data, error } = await sb
+    .from("media")
+    .update(update)
+    .eq("id", id)
+    .select("*")
+    .single();
+  if (error) throw error;
+  return toMedia(data);
 }
 
 export async function deleteMedia(id: string): Promise<void> {

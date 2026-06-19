@@ -154,6 +154,7 @@ export interface CreateOrderInput {
 export interface MediaFile {
   id: string;
   filename: string;
+  altText: string;
   url: string;
   path: string;
   type: "image" | "video";

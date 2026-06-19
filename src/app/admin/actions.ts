@@ -21,6 +21,7 @@ import {
   deleteCollection,
   uniqueCollectionSlug,
   createMedia,
+  updateMedia,
   deleteMedia,
   getMedia,
   listMedia,
@@ -192,6 +193,7 @@ export async function uploadMediaAction(formData: FormData) {
       const up = await uploadToStorage(file);
       const record = await createMedia({
         filename: up.filename,
+        altText: "",
         url: up.url,
         path: up.path,
         type: up.type,
@@ -203,6 +205,20 @@ export async function uploadMediaAction(formData: FormData) {
     return { ok: true, files: saved };
   } catch (e) {
     return { ok: false, error: (e as Error).message, files: [] };
+  }
+}
+
+export async function updateMediaAction(
+  id: string,
+  patch: { filename?: string; altText?: string },
+): Promise<{ ok: boolean; error?: string }> {
+  await requireAuth();
+  try {
+    await updateMedia(id, patch);
+    revalidateAdmin();
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
   }
 }
 
@@ -255,7 +271,7 @@ export async function recordMediaAction(meta: {
 }): Promise<{ ok: boolean; file?: MediaFile; error?: string }> {
   await requireAuth();
   try {
-    const file = await createMedia(meta);
+    const file = await createMedia({ ...meta, altText: "" });
     revalidateAdmin();
     return { ok: true, file };
   } catch (e) {

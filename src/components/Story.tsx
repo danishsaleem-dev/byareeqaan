@@ -56,7 +56,7 @@ export function Story({ data }: { data?: StoryData }) {
                 <Leaf flip className="absolute -right-4 bottom-6 h-2/3 w-auto text-white/20" />
                 <div className="absolute inset-0 flex items-center justify-center p-10">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/logo.png" alt="By Areeqaan" className="h-auto w-full max-w-[70%] object-contain drop-shadow-[0_2px_20px_rgba(255,255,255,0.4)]" />
+                  <img src="/logo.png" alt="By Areeqaan" className="h-auto w-full max-w-[70%] object-contain brightness-0 invert drop-shadow-[0_2px_20px_rgba(255,255,255,0.5)]" />
                 </div>
               </>
             )}

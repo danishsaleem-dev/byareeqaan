@@ -1,12 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Serve modern formats; the optimizer down-sizes per device.
+  // Images are already resized + re-encoded to WebP client-side before upload
+  // (see src/lib/image-compress.ts), so Vercel's Image Optimization pipeline
+  // would just be re-processing already-optimal files at extra cost. Disabling
+  // it means next/image renders a plain <img> with no /_next/image proxy call
+  // and zero "Image Optimization - Transformations" usage on Vercel.
   images: {
-    formats: ["image/avif", "image/webp"],
-    minimumCacheTTL: 31536000, // 1 year — images are content-addressed via URL
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
-    imageSizes: [48, 96, 128, 256, 384],
+    unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
       // Supabase Storage (project subdomain).
